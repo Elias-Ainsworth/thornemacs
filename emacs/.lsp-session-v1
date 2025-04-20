@@ -1,0 +1,1 @@
+#s(lsp-session ("/persist/home/elias-ainsworth/projects/thornelib" "/persist/home/elias-ainsworth/projects/thornmacs") nil #s(hash-table test equal) #s(hash-table test equal) #s(hash-table test equal))

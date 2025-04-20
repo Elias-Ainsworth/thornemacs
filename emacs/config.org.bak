@@ -1,0 +1,330 @@
+#+title: Emacs Config
+
+* Lexical Binding
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t -*-
+#+end_src
+
+* Package Setup
+
+#+begin_src emacs-lisp
+(require 'package)
+(setq package-enable-at-startup nil)
+#+end_src
+
+* Bootstrap `use-package`
+
+#+begin_src emacs-lisp
+(require 'use-package)
+(setq use-package-always-ensure t)
+#+end_src
+
+* Evil Mode
+
+#+begin_src emacs-lisp
+  (use-package evil
+    :config
+    (evil-mode 1))
+
+  (use-package embrace)
+  
+  (use-package evil-embrace
+    :after (evil, embrace)
+    :config
+    (evil-embrace-enable-evil-surround-integration))
+
+  (use-package evil-easymotion
+    :after evil
+    :config (evilem-default-keybindings "SPC"))
+#+end_src
+
+* Styling
+
+** Disable Default Disgustingness
+
+#+begin_src emacs-lisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+#+end_src
+
+** Theme
+
+*** Catppuccin
+
+#+begin_src emacs-lisp
+(use-package catppuccin-theme
+    :config (setq catppuccin-flavor 'mocha)
+    :init
+    (load-theme 'catppuccin :no-confirm))
+(add-hook 'server-after-make-frame-hook #'catppuccin-reload)
+#+end_src
+
+*** Wallust
+
+#+begin_src emacs-lisp
+(require 'json)
+(require 'filenotify)
+
+;; Path to your Wallust JSON
+(defvar my/wallust-json-path "~/.cache/wallust/nix.json")
+
+;; Watch descriptor
+(defvar my/wallust-watch-descriptor nil)
+
+;; Function to load background from Wallust JSON
+(defun my/load-wallust-bg-from-json ()
+  "Load background color from Wallust JSON and apply it to default face."
+  (interactive)
+  (when (file-exists-p my/wallust-json-path)
+    (let* ((json-object-type 'alist)
+           (json (with-temp-buffer
+                   (insert-file-contents my/wallust-json-path)
+                   (json-read)))
+           (bg (alist-get 'background (alist-get 'special json))))
+      (when bg
+        (set-face-background 'default bg)
+        (message "Set background to: %s" bg)))))
+
+;; Watcher function
+(defun my/start-wallust-bg-watcher ()
+  "Start watching the Wallust JSON file for background changes."
+  (interactive)
+  (unless (and my/wallust-watch-descriptor
+               (file-notify-valid-p my/wallust-watch-descriptor))
+    (when (file-exists-p my/wallust-json-path)
+      (setq my/wallust-watch-descriptor
+            (file-notify-add-watch
+             my/wallust-json-path
+             '(change)
+             (lambda (_event) (my/load-wallust-bg-from-json)))))
+    (message "Started watching Wallust JSON for background updates.")))
+
+;; Optional: start the watcher immediately
+(my/load-wallust-bg-from-json)
+(my/start-wallust-bg-watcher)
+#+end_src
+
+** Transparency
+
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(alpha-background . 80))
+(set-frame-parameter nil 'alpha-background 80)
+(set-face-background 'default nil (selected-frame))
+#+end_src
+
+** UI
+
+*** Dashboard
+
+#+begin_src emacs-lisp
+(use-package dashboard
+  :init
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner 'official)
+  (setq dashboard-center-content t)
+  (setq dashboard-items '((recents . 5)
+                          (projects . 3)
+                          (agenda . 3))))
+
+#+end_src
+
+*** Statusline
+
+
+#+begin_src emacs-lisp
+(use-package nerd-icons) ;; Needed by doom-modeline
+
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode)
+  :init
+  (setq doom-modeline-height 25
+        doom-modeline-bar-width 3
+        doom-modeline-icon t
+        doom-modeline-major-mode-icon t
+        doom-modeline-buffer-file-name-style 'truncate-upto-project))
+#+end_src
+
+*** Indent Guides
+
+#+begin_src emacs-lisp
+(use-package highlight-indent-guides
+  :hook ((prog-mode . highlight-indent-guides-mode))
+  :config
+  (setq highlight-indent-guides-method 'character
+        highlight-indent-guides-auto-enabled t
+        highlight-indent-guides-responsive 'top))
+#+end_src
+
+*** Colorizer
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :hook (prog-mode . rainbow-mode))
+#+end_src
+
+*** Smart Parentheses
+
+#+begin_src emacs-lisp
+(use-package smartparens
+  :hook (prog-mode . smartparens-mode)
+  :config
+  (require 'smartparens-config)
+  (sp-use-smartparens-bindings))
+#+end_src
+
+* Navigation
+
+** Which-key
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :init
+  (which-key-mode)
+  :config
+  (setq which-key-idle-delay 0.3
+        which-key-popup-type 'minibuffer)) ;; optional popup style
+#+end_src
+
+** Consult
+
+#+begin_src emacs-lisp
+(use-package consult
+  :bind
+  (("C-s" . consult-line)
+   ("C-x b" . consult-buffer)
+   ("M-y" . consult-yank-pop)
+   ("M-g g" . consult-goto-line)
+   ("M-g M-g" . consult-goto-line)))
+#+end_src
+
+** Embark
+
+#+begin_src emacs-lisp
+(use-package embark
+  :bind
+  (("C-." . embark-act)         ;; pick some action
+   ("C-;" . embark-dwim)        ;; smart actions
+   ("C-h B" . embark-bindings)) ;; show all bindings
+  :init
+  ;; Use the same window for actions
+  (setq embark-action-indicator
+        (lambda (&optional _)
+          (which-key--show-keymap "Embark Actions" embark--keymap nil nil t)))
+  (setq embark-become-indicator embark-action-indicator))
+#+end_src
+
+** Vertico
+
+#+begin_src emacs-lisp
+(use-package vertico
+  :init
+  (vertico-mode)
+  :config
+  (setq vertico-cycle t))  ;; Cycle through candidates
+#+end_src
+
+** Orderless
+
+#+begin_src emacs-lisp
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
+** Marginalia
+
+#+begin_src emacs-lisp
+(use-package marginalia
+  :init
+  (marginalia-mode))
+#+end_src
+
+
+* Direnv
+
+#+begin_src emacs-lisp
+(use-package envrc
+  :config
+  (envrc-global-mode))
+#+end_src
+
+* Auto-completion
+
+#+begin_src emacs-lisp
+  (use-package company
+    :init
+    (global-company-mode)
+    :hook (prog-mode . company-mode)
+    :config
+    (setq company-idle-delay 0
+          company-minimum-prefix-length 1
+          company-selection-wrap-around t
+          company-tooltip-align-annotations t
+          company-frontends '(company-pseudo-tooltip-frontend)))
+
+  (setq lsp-completion-provider :capf)
+
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    (define-key company-active-map (kbd "RET") nil))
+#+end_src
+
+* LSP
+
+* Dirvish
+
+#+begin_src emacs-lisp
+(use-package dirvish
+  :init
+  (dirvish-override-dired-mode)
+  :config
+  (setq dirvish-default-layout '(0 0.25 0.75))
+  (setq dirvish-mode-line-format
+	'(:left (sort symlink) :right (omit yank index)))
+  (setq dirvish-header-line-height 24))
+#+end_src
+
+* Org
+
+** Org-babel
+
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((rust . t)
+	(nix . t)
+     (emacs-lisp . t))) ;; you can enable more here
+#+end_src
+
+** Org-roam
+
+#+begin_src emacs-lisp
+(use-package org-roam
+  :custom
+  (org-roam-directory "~/org-roam")
+  :config
+  (org-roam-db-autosync-mode))
+#+end_src
+
+* Rustic (Rust dev)
+
+#+begin_src emacs-lisp
+  (use-package rustic
+    :config
+    (setq rustic-lsp-client 'eglot
+          rustic-format-on-save t)  ;; Format with rustfmt on save
+    (add-hook 'rustic-mode-hook #'eglot-ensure))
+  (use-package eldoc-box
+    :after eldoc
+    :hook (eglot-managed-mode . eldoc-box-hover-mode))
+  (use-package ob-rust
+    :ensure t)
+#+end_src

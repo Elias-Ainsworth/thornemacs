@@ -1,0 +1,20 @@
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+#+TITLE: Magit
+
+* Lexical Binding
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t -*-
+#+end_src
+
+* Config
+
+#+begin_src emacs-lisp
+(use-package magit
+  :commands (magit-status magit-log-current magit-blame)
+  :bind (("C-x g" . magit-status)         ;; Shortcut to open Magit Status
+         ("C-x C-g" . magit-dispatch)    ;; Magit dispatch for other actions
+         ("C-x M-g" . magit-blame))       ;; Shortcut for Magit Blame
+  :config
+)
+#+end_src

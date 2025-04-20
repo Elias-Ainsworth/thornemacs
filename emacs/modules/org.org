@@ -1,0 +1,53 @@
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+#+TITLE: Direnv 
+
+* Lexical Binding
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t -*-
+#+end_src
+
+* General Settings
+
+#+begin_src emacs-lisp
+  ;; Auto line wrap
+  (add-hook 'org-mode-hook #'auto-fill-mode)
+
+  ;; Indentation for headings and lists
+  (add-hook 'org-mode-hook #'org-indent-mode)
+
+  ;; Visual wrapping (soft word wrap)
+  (add-hook 'org-mode-hook #'visual-line-mode)
+
+  ;; Optional: Edit code blocks neatly
+  (setq org-edit-src-content-indentation 0)
+#+end_src
+
+* Org-modern
+
+#+begin_src emacs-lisp
+(use-package org-modern
+  :after org
+  :config
+  (global-org-modern-mode))
+#+end_src
+
+* Org-babel
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'org
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((rust . t)
+     (nix . t)
+     (org . t)
+     (emacs-lisp . t))))
+#+end_src
+
+* Org-roam
+
+#+begin_src emacs-lisp
+(use-package org-roam
+  :custom (org-roam-directory "~/org-roam")
+  :config (org-roam-db-autosync-mode))
+#+end_src
