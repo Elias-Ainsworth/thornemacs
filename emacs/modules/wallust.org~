@@ -1,8 +1,0 @@
-#+PROPERTY: header-args:emacs-lisp :tangle yes
-#+TITLE: Wallust 
-
-* Lexical Binding
-
-#+begin_src emacs-lisp
-;;; -*- lexical-binding: t -*-
-#+end_src
