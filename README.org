@@ -222,19 +222,7 @@ Just use `nix develop`
 ;; Optional: start the watcher immediately
 (thornemacs/load-wallust-bg-from-json)
 (thornemacs/start-wallust-bg-watcher)
-
-
-(defun thornemacs/load-wallust-bg-from-json-wrapper (frame)
-  "Ensure wallust background loads on new frames."
-  (with-selected-frame frame
-    (thornemacs/load-wallust-bg-from-json)))
-
-(add-hook 'after-make-frame-functions #'thornemacs/load-wallust-bg-from-json-wrapper)
-
-;; Load once for the first frame if graphical
-(when (display-graphic-p)
-  (thornemacs/load-wallust-bg-from-json))
-(setq debug-on-error t)
+(global-set-key (kbd "C-c w") #'thornemacs/load-wallust-bg-from-json)
 #+end_src
 
 *** Transparency
