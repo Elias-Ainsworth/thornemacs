@@ -1,6 +1,5 @@
 #+PROPERTY: header-args:emacs-lisp :tangle config.el :comments no :mkdirp yes :prologue "(unless (bound-and-true-p lexical-binding) (princ \";;; -*- lexical-binding: t -*-\\n\"))"
-#+title: Emacs Config
-* ThornEmacs
+#+title: ThornEmacs
 
 ThornEmacs is my personalized configuration of emacs, using the
 [[https://github.com/nix-community/emacs-overlay][emacs-overlay for nixpkgs]]. Customized to enhance productivity and
