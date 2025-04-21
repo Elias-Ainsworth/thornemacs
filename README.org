@@ -245,7 +245,8 @@ Just use `nix develop`
   (dashboard-setup-startup-hook)
 
   ;; Banner and layout
-  (setq dashboard-startup-banner 'official) ; You can use a custom path too
+  (setq dashboard-startup-banner "./assets/ascii/elias.txt") ; You can use a custom path too
+  (setq dashboard-banner-logo-title "")
   (setq dashboard-center-content t)
   (setq dashboard-show-shortcuts nil)
 
@@ -253,6 +254,12 @@ Just use `nix develop`
   (setq dashboard-items '((recents  . 5)
                           (projects . 5)
                           (agenda   . 5))))
+(setq dashboard-footer-messages
+      (let ((quotes '("#[derive(dumb)]"
+                      "「僕はエリアス・エインズワースかもしれないが、
+                                チセがいない――つまり、僕は完全に『チセレス』だ。」 "
+                      "Sacrifice yourself, or bow to lesser gods...")))
+        (list (nth (random (length quotes)) quotes))))
 #+end_src
 
 *** Modeline
