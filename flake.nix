@@ -20,19 +20,18 @@
       systems = import inputs.systems;
 
       perSystem =
-        { system, ... }:
+        { pkgs, system, ... }:
         let
-          pkgs = import nixpkgs {
+          emacsPkgs = import nixpkgs {
             inherit system;
             overlays = [ emacs-overlay.overlay ];
           };
 
-          thornemacs = pkgs.callPackage ./pkgs/emacs-config.nix { inherit pkgs; };
         in
         {
-          packages = {
+          packages = rec {
+            thornemacs = emacsPkgs.callPackage ./default.nix { };
             default = thornemacs;
-            thornemacs = thornemacs;
           };
 
           devShells.default = pkgs.mkShell {
