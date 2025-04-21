@@ -3,5 +3,5 @@ emacs/eln-cache/
 emacs/auto-save-list/
 pkgs/
 emacs/
-result/
+result
 .direnv/

@@ -18,15 +18,12 @@ damned config).
 * Installation
 
 ** NixOS
-:PROPERTIES:
-:CUSTOM_ID: nix-install
-:END:
 
 Include the following input in your `flake.nix` file:
 
 #+begin_src nix :tangle no
 {
-  input.thornemacs.url = "github:Elias-Ainsworth/thornemacs";
+  inputs.thornemacs.url = "github:Elias-Ainsworth/thornemacs";
 }
 #+end_src
 
@@ -34,7 +31,7 @@ Then include it in your `environment.systemPackages` or
 `home.packages` by referencing the input:
 
 #+begin_src nix :tangle no
-  input.thornemacs.packages.${pkgs.system}.default
+  inputs.thornemacs.packages.${pkgs.system}.default
 #+end_src
 
 Alternatively, it can also be run directly:
@@ -48,7 +45,7 @@ Overrides coming soon...
 ** Legacy *NIX based operating systems
 
 1. [[https://nix-community.github.io/home-manager/][Install home-manager]]
-2. Then go back to the section on [[#nix-install][NixOS]] and follow those steps.
+2. Then go back to the section on [[** NixOS][NixOS]] and follow those steps.
 
 * Configuration
 
@@ -56,7 +53,7 @@ To configure this...configuration to your liking:
 1. If the configuration involves a package add it to the
    `extraEmacsPackages` section in [[file:default.nix][default.nix]].
 2. Set it up by editing this file (yes the README file) under the
-   [[#actual-config][actual config]] section.
+   [[** The Actual Config][actual config]] section.
 
 * Usage
 
@@ -736,10 +733,10 @@ Just use `nix develop`
 
 * TO-DO
 
-- [ ] Implement more colorschemes because I like way too many of them.
-- [ ] Add the option for overrides...bc nix.
-- [ ] Add custom banners and footers.
-- [ ] Whatever else I come up with lmao.
+- [] Implement more colorschemes because I like way too many of them.
+- [] Add the option for overrides...bc nix.
+- [] Add custom banners and footers.
+- [] Whatever else I come up with lmao.
 
 * Credits
 
