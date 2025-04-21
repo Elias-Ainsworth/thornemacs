@@ -226,6 +226,11 @@ Just use `nix develop`
 ;; Optional: start the watcher immediately
 (thornemacs/load-wallust-bg-from-json)
 (thornemacs/start-wallust-bg-watcher)
+
+;; Run it for each frame dammit!
+(add-hook 'after-make-frame-functions
+          (lambda (_frame)
+            (thornemacs/load-wallust-bg-from-json)))
 #+end_src
 
 *** Transparency
