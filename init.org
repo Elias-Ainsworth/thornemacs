@@ -1,9 +1,91 @@
-;;; -*- lexical-binding: t -*-
+#+PROPERTY: header-args:emacs-lisp :tangle config.el :comments no :mkdirp yes :prologue "(unless (bound-and-true-p lexical-binding) (princ \";;; -*- lexical-binding: t -*-\\n\"))"
+#+title: ThornEmacs
 
+ThornEmacs is my personalized configuration of emacs, using the
+[[https://github.com/nix-community/emacs-overlay][emacs-overlay for nixpkgs]]. Customized to enhance productivity and
+devolopment workflows...and basically function like my neovim config:
+[[https://github.com/Elias-Ainsworth/thornevim][ThorneVim]].
+
+* Features
+
+- A custom function to toggle between `eglot (default)` and `lsp-mode`.
+- A custom function to set the background to a the background color
+  determinied by wallust.
+Among other things (I'll get to this once I actually finish this
+damned config).
+
+* Installation
+
+** NixOS
+
+Include the following input in your `flake.nix` file:
+
+#+begin_src nix :tangle no
+{
+  inputs.thornemacs.url = "github:Elias-Ainsworth/thornemacs";
+}
+#+end_src
+
+Then include it in your `environment.systemPackages` or
+`home.packages` by referencing the input:
+
+#+begin_src nix :tangle no
+  inputs.thornemacs.packages.${pkgs.system}.default
+#+end_src
+
+Alternatively, it can also be run directly:
+
+#+begin_src console :tangle no
+nix run github:Elias-Ainsworth/thornemacs
+#+end_src
+
+Overrides coming soon...
+
+** Legacy *NIX based operating systems
+
+1. [[https://nix-community.github.io/home-manager/][Install home-manager]]
+2. Then go back to the section on [[#nixos][NixOS]] and follow those steps.
+
+* Configuration
+
+To configure this...configuration to your liking:
+1. If the configuration involves a package add it to the
+   `extraEmacsPackages` section in [[file:default.nix][default.nix]].
+2. Set it up by editing this file (yes the README file) under the
+   [[#the-actual-config][actual config]] section.
+
+* Usage
+
+You're kidding me right? It's emacs (with evil-mode)...use it like
+emacs (with evil-mode).
+
+* Documentation
+
+This is more for my reference than anything else. But if you would
+like to view my documentation, check out [[file:docs/][./docs]].
+
+* Hacking
+Just use `nix develop`
+
+* The Actual Config
+
+** Lexical Binding
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t -*-
+#+end_src
+
+** Performance Tweaks
+
+#+begin_src emacs-lisp
 (setq gc-cons-threshold (* 50 1000 1000))
 (add-hook 'emacs-startup-hook
           (lambda () (setq gc-cons-threshold (* 2 1000 1000))))
+#+end_src
 
+** Auto-Tangle on Save
+
+#+begin_src emacs-lisp
 (defun auto-tangle-config ()
   (when (string-equal (buffer-file-name)
                       (expand-file-name "README.org" user-emacs-directory))
@@ -13,15 +95,27 @@
 (add-hook 'org-mode-hook
           (lambda ()
             (add-hook 'after-save-hook #'auto-tangle-config nil 'local)))
+#+end_src
 
+** Package Setup
+
+#+begin_src emacs-lisp
 (require 'package)
 (setq package-enable-at-startup nil)
+#+end_src
 
+** Bootstrap `use-package`
+
+#+begin_src emacs-lisp
 (require 'use-package)
 (setq use-package-always-ensure t
       use-package-always-defer t
       use-package-expand-minimally t)
+#+end_src
 
+** Evil Mode
+
+#+begin_src emacs-lisp
 ;; Prevent conflicts with evil-collection
 (setq evil-want-keybinding nil)
 
@@ -44,30 +138,48 @@
 (use-package evil-commentary
   :after evil
   :init (evil-commentary-mode 1))
+#+end_src
 
-;; Disable UI chrome early
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+** UI
 
-(setq window-divider-default-right-width 0)
-(setq window-divider-default-bottom-width 0)
-(window-divider-mode -1)
+*** Disable Default GUI Elements
 
-(add-to-list 'default-frame-alist '(internal-border-width . 0))
-(set-frame-parameter nil 'internal-border-width 0)
+#+begin_src emacs-lisp
+  ;; Disable UI chrome early
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
 
+  (setq window-divider-default-right-width 0)
+  (setq window-divider-default-bottom-width 0)
+  (window-divider-mode -1)
+
+  (add-to-list 'default-frame-alist '(internal-border-width . 0))
+  (set-frame-parameter nil 'internal-border-width 0)
+#+end_src
+
+*** Font sizing
+
+#+begin_src emacs-lisp
 (let ((current-font (face-attribute 'default :family)))
   (set-face-attribute 'default nil
     :family current-font
     :height 120))
+#+end_src
 
+*** Theme - Catppuccin
+
+#+begin_src emacs-lisp
 (use-package catppuccin-theme
   :config (setq catppuccin-flavor 'mocha)
   :init (load-theme 'catppuccin :no-confirm))
 
 (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
+#+end_src
 
+*** Wallust Integration
+
+#+begin_src emacs-lisp
 (require 'json)
 (require 'filenotify)
 
@@ -109,20 +221,20 @@
 ;; Optional: start the watcher immediately
 (thornemacs/load-wallust-bg-from-json)
 (thornemacs/start-wallust-bg-watcher)
+(global-set-key (kbd "C-c w") #'thornemacs/load-wallust-bg-from-json)
+#+end_src
 
-;; on daemon/client frame creation
-(add-hook 'after-make-frame-functions
-    (lambda (frame)
-      (select-frame frame)
-      (when (display-graphic-p frame)
-        (thornemacs/load-wallust-bg-from-json))))
+*** Transparency
 
-(setq debug-on-error t)
-
+#+begin_src emacs-lisp
 (add-to-list 'default-frame-alist '(alpha-background . 80))
 (set-frame-parameter nil 'alpha-background 80)
 (set-face-background 'default nil (selected-frame))
+#+end_src
 
+*** Dashboard
+
+#+begin_src emacs-lisp
 (use-package dashboard
   :demand t
   :init
@@ -132,7 +244,8 @@
   (dashboard-setup-startup-hook)
 
   ;; Banner and layout
-  (setq dashboard-startup-banner 'official) ; You can use a custom path too
+  (setq dashboard-startup-banner "./assets/ascii/elias.txt") ; You can use a custom path too
+  (setq dashboard-banner-logo-title "")
   (setq dashboard-center-content t)
   (setq dashboard-show-shortcuts nil)
 
@@ -140,7 +253,17 @@
   (setq dashboard-items '((recents  . 5)
                           (projects . 5)
                           (agenda   . 5))))
+(setq dashboard-footer-messages
+      (let ((quotes '("#[derive(dumb)]"
+                      "「僕はエリアス・エインズワースかもしれないが、
+                                チセがいない――つまり、僕は完全に『チセレス』だ。」 "
+                      "Sacrifice yourself, or bow to lesser gods...")))
+        (list (nth (random (length quotes)) quotes))))
+#+end_src
 
+*** Modeline
+
+#+begin_src emacs-lisp
 (use-package nerd-icons)
 
 (use-package doom-modeline
@@ -151,7 +274,11 @@
         doom-modeline-icon t
         doom-modeline-major-mode-icon t
         doom-modeline-buffer-file-name-style 'truncate-upto-project))
+#+end_src
 
+*** Indent Guides
+
+#+begin_src emacs-lisp
 (defun thornemacs/enable-indent-guides-safe ()
   (when (face-background 'default)
     (highlight-indent-guides-mode)))
@@ -162,57 +289,96 @@
   (setq highlight-indent-guides-method 'character
         highlight-indent-guides-auto-enabled t
         highlight-indent-guides-responsive 'top))
+#+end_src
 
+*** Rainbow Mode
+
+#+begin_src emacs-lisp
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode))
+#+end_src
 
-(use-package smartparens
-  :init (smartparens-global-mode)
-  :hook (prog-mode . smartparens-mode)
-  :config
-  (require 'smartparens-config))
+*** Smartparens
 
-(use-package which-key
-  :defer 1
-  :config
-  (which-key-mode)
-  (setq which-key-idle-delay 0.3))
+#+begin_src emacs-lisp
+  (use-package smartparens
+    :init (smartparens-global-mode)
+    :hook (prog-mode . smartparens-mode)
+    :config
+    (require 'smartparens-config))
+#+end_src
 
-(use-package avy
-  :bind (("M-s" . avy-goto-char-timer)
-         ("M-g c" . avy-goto-char)
-         ("M-g w" . avy-goto-word-1)))
+** Navigation
 
-(use-package consult
-  :bind (("C-s" . consult-line)
-         ("C-x b" . consult-buffer)
-         ("M-g g" . consult-goto-line)
-         ("M-g M-g" . consult-goto-line)))
+*** Which-key
 
-(use-package embark
-  :bind (("C-." . embark-act)
-         ("C-;" . embark-dwim)
-         ("C-h B" . embark-bindings))
-  :init
-  (setq embark-action-indicator
-        (lambda (&optional _)
-          (which-key--show-keymap "Embark Actions" embark--keymap nil nil t)))
-  (setq embark-become-indicator embark-action-indicator))
+#+begin_src emacs-lisp
+    (use-package which-key
+      :defer 1
+      :config
+      (which-key-mode)
+      (setq which-key-idle-delay 0.3))
+#+end_src
 
-(use-package orderless
-  :init
-  (setq completion-styles '(orderless)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+*** Avy
 
-(use-package vertico
-  :init
-  (setq vertico-cycle t)
-  (vertico-mode))
+#+begin_src emacs-lisp
+    (use-package avy
+      :bind (("M-s" . avy-goto-char-timer)
+             ("M-g c" . avy-goto-char)
+             ("M-g w" . avy-goto-word-1)))
+#+end_src
 
-(use-package marginalia
-  :init (marginalia-mode))
+*** Consult
 
+#+begin_src emacs-lisp
+    (use-package consult
+      :bind (("C-s" . consult-line)
+             ("C-x b" . consult-buffer)
+             ("M-g g" . consult-goto-line)
+             ("M-g M-g" . consult-goto-line)))
+#+end_src
+
+
+*** Embark
+#+begin_src emacs-lisp
+    (use-package embark
+      :bind (("C-." . embark-act)
+             ("C-;" . embark-dwim)
+             ("C-h B" . embark-bindings))
+      :init
+      (setq embark-action-indicator
+            (lambda (&optional _)
+              (which-key--show-keymap "Embark Actions" embark--keymap nil nil t)))
+      (setq embark-become-indicator embark-action-indicator))
+#+end_src
+
+*** Orderless
+#+begin_src emacs-lisp
+    (use-package orderless
+      :init
+      (setq completion-styles '(orderless)
+            completion-category-defaults nil
+            completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
+*** Vertico
+#+begin_src emacs-lisp
+  (use-package vertico
+    :init
+    (setq vertico-cycle t)
+    (vertico-mode))
+#+end_src
+
+*** Marginalia
+
+#+begin_src emacs-lisp
+    (use-package marginalia
+      :init (marginalia-mode))
+#+end_src
+
+*** Dirvish
+#+begin_src emacs-lisp
 (use-package dirvish
   :after evil
   :init
@@ -238,7 +404,11 @@
     (evil-define-key 'normal dirvish-mode-map
       (kbd "RET") #'dired-find-file))
 )
+#+end_src
 
+** Direnv
+
+#+begin_src emacs-lisp
 (use-package envrc
   :demand t  ; Load immediately instead of deferring
   :config
@@ -254,23 +424,34 @@
 
   ;; Add this hook to prog-mode which will run before our LSP hooks
   (add-hook 'prog-mode-hook #'thornemacs/ensure-envrc-before-lsp '5))
+#+end_src
 
-(use-package company
-  :init (global-company-mode)
-  :hook ((prog-mode . company-mode)
-	 (org-mode . company-mode)
-	 (emacs-lisp-mode . company-mode))
-  :config
-  (setq company-idle-delay 0
-        company-minimum-prefix-length 1
-        company-selection-wrap-around t
-        company-tooltip-align-annotations t
-        company-frontends '(company-pseudo-tooltip-frontend))
-  (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
-  (define-key company-active-map (kbd "C-n") #'company-select-next)
-  (define-key company-active-map (kbd "C-p") #'company-select-previous)
-  (define-key company-active-map (kbd "RET") nil))
+** LSP
 
+*** Auto-completion
+
+#+begin_src emacs-lisp
+  (use-package company
+    :init (global-company-mode)
+    :hook ((prog-mode . company-mode)
+  	 (org-mode . company-mode)
+  	 (emacs-lisp-mode . company-mode))
+    :config
+    (setq company-idle-delay 0
+          company-minimum-prefix-length 1
+          company-selection-wrap-around t
+          company-tooltip-align-annotations t
+          company-frontends '(company-pseudo-tooltip-frontend))
+    (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    (define-key company-active-map (kbd "RET") nil))
+#+end_src
+
+
+*** Togglable LSP System
+
+#+begin_src emacs-lisp
 ;; Define the LSP choice customization
 (defcustom thornemacs/lsp-backend 'eglot
   "The LSP backend to use. Either 'eglot or 'lsp-mode."
@@ -380,7 +561,11 @@
 ;;                     (thornemacs/ensure-envrc-before-lsp)
 ;;                     ;; Start LSP with a small delay
 ;;                     (run-with-timer 0.5 nil #'thornemacs/start-lsp)))))))
+#+end_src
 
+*** LSP Packages Configuration
+
+#+begin_src emacs-lisp
 ;; Install and configure both packages
 (use-package eglot
   :commands (eglot eglot-ensure)
@@ -403,6 +588,11 @@
 
 ;; Add org-mode specific hook for LSP in code blocks
 ;; (add-hook 'org-mode-hook #'thornemacs/setup-org-babel-lsp)
+#+end_src
+
+*** Language-specific LSP Setup
+
+#+begin_src emacs-lisp
 
 ;; Install language modes
 (use-package rustic)
@@ -461,7 +651,11 @@
      (nix . t)
      (org . t)
      (emacs-lisp .t))))
+#+end_src
 
+*** Org-Integration
+
+#+begin_src emacs-lisp
 (defun thornemacs/start-lsp-manually-for-lang (lang)
   "Start LSP for a specific language in org-mode code blocks."
   (interactive "sEnter language (e.g., rust, go, nix): ")
@@ -473,26 +667,43 @@
       (message "No mode found for language: %s" lang))))
 
 (global-set-key (kbd "C-c t m") 'thornemacs/start-lsp-manually-for-lang)
+#+end_src
 
+*** Modeline-Integration (WIP)
 
+#+begin_src emacs-lisp
+#+end_src
 
-;; Auto line wrap
-(add-hook 'org-mode-hook #'auto-fill-mode)
+** Org
 
-;; Indentation for headings and lists
-(add-hook 'org-mode-hook #'org-indent-mode)
+*** General Settings
 
-;; Visual wrapping (soft word wrap)
-(add-hook 'org-mode-hook #'visual-line-mode)
+#+begin_src emacs-lisp
+  ;; Auto line wrap
+  (add-hook 'org-mode-hook #'auto-fill-mode)
 
-;; Optional: Edit code blocks neatly
-(setq org-edit-src-content-indentation 0)
+  ;; Indentation for headings and lists
+  (add-hook 'org-mode-hook #'org-indent-mode)
 
+  ;; Visual wrapping (soft word wrap)
+  (add-hook 'org-mode-hook #'visual-line-mode)
+
+  ;; Optional: Edit code blocks neatly
+  (setq org-edit-src-content-indentation 0)
+#+end_src
+
+*** Org-modern
+
+#+begin_src emacs-lisp
 (use-package org-modern
   :after org
   :config
   (global-org-modern-mode))
+#+end_src
 
+*** Org-babel
+
+#+begin_src emacs-lisp
 (with-eval-after-load 'org
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -500,11 +711,20 @@
      (nix . t)
      (org . t)
      (emacs-lisp . t))))
+#+end_src
 
+*** Org-roam
+
+#+begin_src emacs-lisp
 (use-package org-roam
   :custom (org-roam-directory "~/org-roam")
   :config (org-roam-db-autosync-mode))
+#+end_src
 
+
+** Magit
+
+#+begin_src emacs-lisp
 (use-package magit
   :commands (magit-status magit-log-current magit-blame)
   :bind (("C-x g" . magit-status)         ;; Shortcut to open Magit Status
@@ -512,3 +732,22 @@
          ("C-x M-g" . magit-blame))       ;; Shortcut for Magit Blame
   :config
 )
+#+end_src
+
+* TO-DO
+
+- [] Implement more colorschemes because I like way too many of them.
+- [] Add the option for overrides...bc nix.
+- [] Add custom banners and footers.
+- [] Whatever else I come up with lmao.
+
+* Credits
+
+- [[https://github.com/iynaix][@iynaix]]:
+  - Get with the program already folks! I +stole+ took inspiration
+    from [[https://github.com/iynaix/focal][iynaix/focal]] for the flake as well as this README.
+
+- [[https://codeberg.org/acidbong][@acidbong]]:
+  - For helping my sorry ass over on the [[https://matrix.to/#/#emacs:nixos.org][Nix Emacs]] matrix space.
+  - And for providing this very helpful [[https://codeberg.org/acidbong/nixos/src/branch/master/pkgs/emacs][configuration]] for me to +steal+ take
+    inspiration from.

@@ -6,7 +6,7 @@
 emacsWithPackagesFromUsePackage {
   package = emacs-git-pgtk;
 
-  config = ./README.org;
+  config = ./init.org;
 
   defaultInitFile = true;
   alwaysEnsure = true;

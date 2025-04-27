@@ -1,0 +1,328 @@
+#+PROPERTY: header-args:emacs-lisp :tangle config.el :comments no :mkdirp yes :prologue "(unless (bound-and-true-p lexical-binding) (princ \";;; -*- lexical-binding: t -*-\\n\"))"
+#+title: ThornEmacs
+
+ThornEmacs is my personalized Emacs configuration, built on the
+[[https://github.com/nix-community/emacs-overlay][emacs-overlay for nixpkgs]], tailored to enhance productivity and development workflows,
+mirroring my Neovim setup, [[https://github.com/Elias-Ainsworth/thornevim][ThorneVim]].
+
+* Features
+
+- A custom function to toggle between `eglot` (default) and `lsp-mode`.
+- A function to set the background color based on the Wallust integration.
+- And much more... (when I finish the config).
+
+* Installation
+
+** NixOS
+
+To use ThornEmacs in NixOS, add the following to your `flake.nix`:
+
+#+begin_src nix :tangle no
+{
+  inputs.thornemacs.url = "github:Elias-Ainsworth/thornemacs";
+}
+#+end_src
+
+Then include it in `environment.systemPackages` or `home.packages`:
+
+#+begin_src nix :tangle no
+  inputs.thornemacs.packages.${pkgs.system}.default
+#+end_src
+
+You can also run it directly:
+
+#+begin_src console :tangle no
+nix run github:Elias-Ainsworth/thornemacs
+#+end_src
+
+Overrides coming soon...
+
+** Legacy *NIX Systems
+
+1. Install [[https://nix-community.github.io/home-manager/][Home Manager]].
+2. Follow the NixOS installation steps outlined above.
+
+* Configuration
+
+To configure ThornEmacs:
+1. For package-related settings, add them to the `extraEmacsPackages` section in [[file:default.nix][default.nix]].
+2. Edit this file (README) under the [[#the-actual-config][actual config]] section.
+
+* Usage
+
+Just use it like Emacs (with evil-mode)!
+
+* Documentation
+
+For detailed documentation, check [[file:docs/][./docs]].
+
+* Hacking
+
+Use `nix develop` for development.
+
+* The Actual Config
+
+** Lexical Binding
+
+Ensure lexical binding is enabled for all configurations:
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t -*-
+#+end_src
+
+** Performance Tweaks
+
+Optimize garbage collection settings for improved performance:
+
+#+begin_src emacs-lisp
+(setq gc-cons-threshold (* 50 1000 1000))
+(add-hook 'emacs-startup-hook
+          (lambda () (setq gc-cons-threshold (* 2 1000 1000))))
+#+end_src
+
+** Auto-Tangle on Save
+
+Automatically tangle the Org file to `config.el` upon saving:
+
+#+begin_src emacs-lisp
+(defun auto-tangle-config ()
+  (when (string-equal (buffer-file-name)
+                      (expand-file-name "README.org" user-emacs-directory))
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (add-hook 'after-save-hook #'auto-tangle-config nil 'local)))
+#+end_src
+
+** Package Setup
+
+Initialize package management for the configuration:
+
+#+begin_src emacs-lisp
+(require 'package)
+(setq package-enable-at-startup nil)
+#+end_src
+
+** Bootstrap `use-package`
+
+Configure `use-package` for efficient package management:
+
+#+begin_src emacs-lisp
+(require 'use-package)
+(setq use-package-always-ensure t
+      use-package-always-defer t
+      use-package-expand-minimally t)
+#+end_src
+
+** Evil Mode Setup
+
+Configure `evil-mode` for Vim-like keybindings:
+
+#+begin_src emacs-lisp
+;; Prevent conflicts with evil-collection
+(setq evil-want-keybinding nil)
+
+(use-package evil
+  :demand t
+  :init
+  :config
+  (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :config (evil-collection-init))
+
+(use-package embrace)
+
+(use-package evil-embrace
+  :after (evil embrace)
+  :config (evil-embrace-enable-evil-surround-integration))
+
+(use-package evil-commentary
+  :after evil
+  :init (evil-commentary-mode 1))
+#+end_src
+
+** UI Configuration
+
+*** Disable Default GUI Elements
+
+Disable unneeded GUI elements for a cleaner interface:
+
+#+begin_src emacs-lisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+(setq window-divider-default-right-width 0)
+(setq window-divider-default-bottom-width 0)
+(window-divider-mode -1)
+
+(add-to-list 'default-frame-alist '(internal-border-width . 0))
+(set-frame-parameter nil 'internal-border-width 0)
+#+end_src
+
+*** Font Sizing
+
+Set default font size:
+
+#+begin_src emacs-lisp
+(let ((current-font (face-attribute 'default :family)))
+  (set-face-attribute 'default nil
+    :family current-font
+    :height 120))
+#+end_src
+
+*** Theme - Catppuccin
+
+Enable the Catppuccin theme:
+
+#+begin_src emacs-lisp
+(use-package catppuccin-theme
+  :config (setq catppuccin-flavor 'mocha)
+  :init (load-theme 'catppuccin :no-confirm))
+
+(add-hook 'server-after-make-frame-hook #'catppuccin-reload)
+#+end_src
+
+*** Wallust Integration
+
+Set up Wallust integration to change background based on JSON:
+
+#+begin_src emacs-lisp
+(require 'json)
+(require 'filenotify)
+
+(defvar thornemacs/wallust-json-path "~/.cache/wallust/nix.json")
+(defvar thornemacs/wallust-watch-descriptor nil)
+
+(defun thornemacs/load-wallust-bg-from-json ()
+  "Load background color from Wallust JSON and apply it."
+  (interactive)
+  (when (file-exists-p thornemacs/wallust-json-path)
+    (let* ((json-object-type 'alist)
+           (json (with-temp-buffer
+                   (insert-file-contents thornemacs/wallust-json-path)
+                   (json-read)))
+           (bg (alist-get 'background (alist-get 'special json))))
+      (when (and bg (stringp bg))
+        (set-face-background 'default bg)
+        (set-face-background 'fringe bg)
+        (message "Set background to: %s" bg)))))
+
+(defun thornemacs/start-wallust-bg-watcher ()
+  "Start watching Wallust JSON for background changes."
+  (interactive)
+  (unless (and thornemacs/wallust-watch-descriptor
+               (file-notify-valid-p thornemacs/wallust-watch-descriptor))
+    (when (file-exists-p thornemacs/wallust-json-path)
+      (setq thornemacs/wallust-watch-descriptor
+            (file-notify-add-watch
+             thornemacs/wallust-json-path
+             '(change)
+             (lambda (_event) (thornemacs/load-wallust-bg-from-json)))))
+    (message "Started watching Wallust JSON for background updates.")))
+
+(thornemacs/load-wallust-bg-from-json)
+(thornemacs/start-wallust-bg-watcher)
+(global-set-key (kbd "C-c w") #'thornemacs/load-wallust-bg-from-json)
+#+end_src
+
+*** Transparency
+
+Set transparency for the Emacs frame:
+
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(alpha-background . 80))
+(set-frame-parameter nil 'alpha-background 80)
+(set-face-background 'default nil (selected-frame))
+#+end_src
+
+** Dashboard
+
+Set up the Emacs dashboard:
+
+#+begin_src emacs-lisp
+(use-package dashboard
+  :demand t
+  :init
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner "./assets/ascii/elias.txt")
+  (setq dashboard-banner-logo-title "")
+  (setq dashboard-center-content t)
+  (setq dashboard-show-shortcuts nil)
+  (setq dashboard-items '((recents  . 5)
+                          (projects . 5)
+                          (agenda   . 5))))
+(setq dashboard-footer-messages
+      (let ((quotes '("#[derive(dumb)]"
+                      "「僕はエリアス・エインズワースかもしれないが、
+                        チセがいない――つまり、僕は完全に『チセレス』だ。」 "
+                      "Sacrifice yourself, or bow to lesser gods...")))
+        (list (nth (random (length quotes)) quotes))))
+#+end_src
+
+** Modeline
+
+Set up the modeline using `doom-modeline`:
+
+#+begin_src emacs-lisp
+(use-package nerd-icons)
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode)
+  :init
+  (setq doom-modeline-height 25
+        doom-modeline-bar-width 3
+        doom-modeline-icon t
+        doom-modeline-major-mode-icon t
+        doom-modeline-buffer-file-name-style 'truncate-upto-project))
+#+end_src
+
+** Indentation Guides
+
+Enable indentation guides in code buffers:
+
+#+begin_src emacs-lisp
+(defun thornemacs/enable-indent-guides-safe ()
+  (when (face-background 'default)
+    (highlight-indent-guides-mode)))
+
+(use-package highlight-indent-guides
+  :hook (prog-mode . thornemacs/enable-indent-guides-safe)
+  :config
+  (setq highlight-indent-guides-method 'character
+        highlight-indent-guides-auto-enabled t
+        highlight-indent-guides-auto-odd-face-perc 30))
+#+end_src
+
+** Project Management with `projectile`
+
+Enable `projectile` for project management:
+
+#+begin_src emacs-lisp
+(use-package projectile
+  :config
+  (projectile-mode 1)
+  (setq projectile-project-search-path '("~/projects/"))
+  (setq projectile-enable-caching t)
+  (setq projectile-completion-system 'ivy))
+#+end_src
+
+** Org-Mode Setup
+
+Set up basic Org-mode for task management:
+
+#+begin_src emacs-lisp
+(setq org-log-done 'time)
+(setq org-hide-leading-stars t)
+(setq org-startup-indented t)
+(setq org-agenda-files '("~/org"))
+(setq org-agenda-span 'day)
+(setq org-todo-keywords
+      '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
+#+end_src
+
