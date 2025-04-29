@@ -45,6 +45,8 @@
               # LSPs
               lua-language-server
               nixd
+
+              aspell
             ];
           };
         };

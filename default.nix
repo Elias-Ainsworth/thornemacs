@@ -18,6 +18,8 @@ emacsWithPackagesFromUsePackage {
       # Core
       use-package
       babel
+      benchmark-init
+      esup
 
       # Evil stack (Vim keybindings)
       evil
@@ -30,6 +32,7 @@ emacsWithPackagesFromUsePackage {
       magit
 
       # Org-mode
+      org
       org-autolist
       org-roam
       org-roam-timestamps
@@ -57,6 +60,7 @@ emacsWithPackagesFromUsePackage {
       which-key
       vertico
       orderless
+      projectile
       marginalia
       avy
       consult
@@ -64,6 +68,7 @@ emacsWithPackagesFromUsePackage {
 
       # UI / Appearance
       catppuccin-theme
+      gruvbox-theme
       doom-modeline
       nerd-icons
       all-the-icons

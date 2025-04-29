@@ -8,7 +8,7 @@ devolopment workflows...and basically function like my neovim config:
 
 * Features
 
-- A custom function to toggle between `eglot (default)` and `lsp-mode`.
+- A custom function to togglglot (default)` and `lsp-mode`.
 - A custom function to set the background to a the background color
   determinied by wallust.
 Among other things (I'll get to this once I actually finish this
@@ -77,10 +77,61 @@ Just use `nix develop`
 
 ** Performance Tweaks
 
+*** Garbage Collection 
+
 #+begin_src emacs-lisp
-(setq gc-cons-threshold (* 50 1000 1000))
+;; Speed up startup by raising GC limits
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6)
+
+;; Temporarily disable file-name handlers
+(defvar original-file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+
 (add-hook 'emacs-startup-hook
-          (lambda () (setq gc-cons-threshold (* 2 1000 1000))))
+          (lambda ()
+            ;; Restore sane defaults
+            (setq gc-cons-threshold (* 100 1024 1024) ;; 100MB
+                  gc-cons-percentage 0.1
+                  file-name-handler-alist original-file-name-handler-alist)
+            (message "Emacs ready in %.2f seconds with %d GCs."
+                     (float-time (time-subtract after-init-time before-init-time))
+                     gcs-done)))
+#+end_src
+
+*** Native Compilation
+
+#+begin_src emacs-lisp
+(when (and (fboundp 'native-comp-available-p)
+           (native-comp-available-p))
+  (setq native-comp-async-report-warnings-errors nil
+        native-comp-deferred-compilation t))
+#+end_src
+
+*** File Operations
+
+#+begin_src emacs-lisp
+;; Delay file handlers until needed
+(setq file-name-handler-alist-original file-name-handler-alist
+      file-name-handler-alist nil)
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq file-name-handler-alist file-name-handler-alist-original
+                  file-name-handler-alist-original nil)
+            (message "Emacs loaded in %s with %d garbage collections."
+                    (format "%.2f seconds"
+                            (float-time (time-subtract after-init-time before-init-time)))
+                    gcs-done)))
+#+end_src
+
+*** Package Loading Order
+
+#+begin_src emacs-lisp
+(setq package-enable-at-startup nil)
+(setq inhibit-startup-message t)
+(setq initial-scratch-message nil)
+(setq frame-inhibit-implied-resize t)
 #+end_src
 
 ** Auto-Tangle on Save
@@ -88,20 +139,13 @@ Just use `nix develop`
 #+begin_src emacs-lisp
 (defun auto-tangle-config ()
   (when (string-equal (buffer-file-name)
-                      (expand-file-name "README.org" user-emacs-directory))
+                      (expand-file-name "init.org" user-emacs-directory))
     (let ((org-confirm-babel-evaluate nil))
       (org-babel-tangle))))
 
 (add-hook 'org-mode-hook
           (lambda ()
             (add-hook 'after-save-hook #'auto-tangle-config nil 'local)))
-#+end_src
-
-** Package Setup
-
-#+begin_src emacs-lisp
-(require 'package)
-(setq package-enable-at-startup nil)
 #+end_src
 
 ** Bootstrap `use-package`
@@ -113,21 +157,41 @@ Just use `nix develop`
       use-package-expand-minimally t)
 #+end_src
 
+** Benchmarking
+
+#+begin_src emacs-lisp
+(use-package benchmark-init
+  :config
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+#+end_src
+
+** Recentf
+
+#+begin_src emacs-lisp
+(use-package recentf
+  :init
+  (setq recentf-max-saved-items 100
+        recentf-max-menu-items 15)
+  :hook (after-init . (lambda ()
+                         (run-with-timer 1 nil #'recentf-mode))))
+#+end_src
+
 ** Evil Mode
 
 #+begin_src emacs-lisp
 ;; Prevent conflicts with evil-collection
-(setq evil-want-keybinding nil)
+;; (setq evil-want-keybinding nil)
 
 (use-package evil
   :demand t
+  :custom
+  (evil-want-keybinding nil)
   :init
-  :config
   (evil-mode 1))
 
  (use-package evil-collection
    :after evil
-   :config (evil-collection-init))
+   :hook (after-init . evil-collection-init))
 
 (use-package embrace)
 
@@ -137,7 +201,7 @@ Just use `nix develop`
 
 (use-package evil-commentary
   :after evil
-  :init (evil-commentary-mode 1))
+  :hook (after-init . evil-commentary-mode))
 #+end_src
 
 ** UI
@@ -167,14 +231,22 @@ Just use `nix develop`
     :height 120))
 #+end_src
 
-*** Theme - Catppuccin
+*** Theme 
 
 #+begin_src emacs-lisp
-(use-package catppuccin-theme
-  :config (setq catppuccin-flavor 'mocha)
-  :init (load-theme 'catppuccin :no-confirm))
+;; (use-package catppuccin-theme
+;;   :config (setq catppuccin-flavor 'mocha)
+;;   :init (load-theme 'catppuccin :no-confirm))
 
-(add-hook 'server-after-make-frame-hook #'catppuccin-reload)
+(use-package gruvbox-theme
+  :defer nil
+  ;; :config
+  ;; Optional: Customize Gruvbox flavor (e.g., light or dark)
+  ;; (setq gruvbox-dark-variant 'hard)  ; Use the 'hard' variant of dark mode
+  :init
+  (load-theme 'gruvbox t)) 
+
+;; (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
 #+end_src
 
 *** Wallust Integration
@@ -183,16 +255,26 @@ Just use `nix develop`
 (require 'json)
 (require 'filenotify)
 
-;; Path to your Wallust JSON
+;; --- Variables
+
 (defvar thornemacs/wallust-json-path "~/.cache/wallust/nix.json")
-
-;; Watch descriptor
 (defvar thornemacs/wallust-watch-descriptor nil)
+(defvar thornemacs/wallust-enabled t
+  "Whether Wallust background is currently active.")
 
-;; Function to load background from Wallust JSON
+(defvar thornemacs/theme-default-background nil
+  "Default theme background color before Wallust is applied.")
+
+;; --- Functions
+
+(defun thornemacs/capture-theme-background ()
+  "Capture the current theme background color before Wallust applies."
+  (unless thornemacs/theme-default-background ;; Only capture once
+    (setq thornemacs/theme-default-background (face-background 'default nil t))
+    (message "[thornemacs] Captured theme background: %s" thornemacs/theme-default-background)))
+
 (defun thornemacs/load-wallust-bg-from-json ()
-  "Load background color from Wallust JSON and apply it to default face."
-  (interactive)
+  "Load Wallust background color from JSON and apply it."
   (when (file-exists-p thornemacs/wallust-json-path)
     (let* ((json-object-type 'alist)
            (json (with-temp-buffer
@@ -200,13 +282,27 @@ Just use `nix develop`
                    (json-read)))
            (bg (alist-get 'background (alist-get 'special json))))
       (when (and bg (stringp bg))
-        (set-face-background 'default bg)
-        (set-face-background 'fringe bg)
-        (message "Set background to: %s" bg)))))
+        (set-face-background 'default bg (selected-frame))
+        (set-face-background 'fringe bg (selected-frame))
+        (message "[thornemacs] Wallust background applied: %s" bg)))))
 
-;; Watcher function
+(defun thornemacs/restore-theme-background ()
+  "Restore the original theme background."
+  (when thornemacs/theme-default-background
+    (set-face-background 'default thornemacs/theme-default-background (selected-frame))
+    (set-face-background 'fringe thornemacs/theme-default-background (selected-frame))
+    (message "[thornemacs] Theme background restored: %s" thornemacs/theme-default-background)))
+
+(defun thornemacs/toggle-wallust-background ()
+  "Toggle between Wallust background and theme background."
+  (interactive)
+  (setq thornemacs/wallust-enabled (not thornemacs/wallust-enabled))
+  (if thornemacs/wallust-enabled
+      (thornemacs/load-wallust-bg-from-json)
+    (thornemacs/restore-theme-background)))
+
 (defun thornemacs/start-wallust-bg-watcher ()
-  "Start watching the Wallust JSON file for background changes."
+  "Start watching Wallust JSON for changes."
   (interactive)
   (unless (and thornemacs/wallust-watch-descriptor
                (file-notify-valid-p thornemacs/wallust-watch-descriptor))
@@ -215,65 +311,153 @@ Just use `nix develop`
             (file-notify-add-watch
              thornemacs/wallust-json-path
              '(change)
-             (lambda (_event) (thornemacs/load-wallust-bg-from-json)))))
-    (message "Started watching Wallust JSON for background updates.")))
+             (lambda (_event)
+               (when thornemacs/wallust-enabled
+                 (thornemacs/load-wallust-bg-from-json))))))
+    (message "[thornemacs] Started watching Wallust JSON.")))
 
-;; Optional: start the watcher immediately
-(thornemacs/load-wallust-bg-from-json)
-(thornemacs/start-wallust-bg-watcher)
-(global-set-key (kbd "C-c w") #'thornemacs/load-wallust-bg-from-json)
+;; --- Setup hooks properly
+
+;; When Emacs starts, capture the theme background after first frame
+(add-hook 'window-setup-hook #'thornemacs/capture-theme-background)
+
+;; Also capture it every time a theme is loaded
+(add-hook 'after-load-theme-hook (lambda ()
+                                   (setq thornemacs/theme-default-background nil) ;; Clear cached value
+                                   (thornemacs/capture-theme-background)
+                                   (when (not thornemacs/wallust-enabled)
+                                     (thornemacs/restore-theme-background))))
+
+;; Load Wallust bg *after* capturing default
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (run-with-timer
+             1 nil ;; small delay to let everything settle
+             (lambda ()
+               (when thornemacs/wallust-enabled
+                 (thornemacs/load-wallust-bg-from-json)
+                 (thornemacs/start-wallust-bg-watcher))))))
+
+;; --- Keybinding
+(global-set-key (kbd "C-c w") #'thornemacs/toggle-wallust-background)
 #+end_src
 
 *** Transparency
 
 #+begin_src emacs-lisp
-(add-to-list 'default-frame-alist '(alpha-background . 80))
-(set-frame-parameter nil 'alpha-background 80)
-(set-face-background 'default nil (selected-frame))
+;;; thornemacs-transparency-toggle.el --- Transparency and background toggle
+
+;; --- Variables
+(defvar thornemacs/transparency-enabled t
+  "Whether transparency is currently enabled.")
+
+(defvar thornemacs/use-wallust-bg nil
+  "Whether to use Wallust background color instead of default.")
+
+(defvar thornemacs/default-background-color nil
+  "Captured background color from the active theme.")
+
+;; --- Helpers
+(defun thornemacs/get-theme-background-color ()
+  "Safely capture the solid background color of the current theme."
+  (let ((current-alpha (frame-parameter nil 'alpha-background)))
+    (unwind-protect
+        (progn
+          ;; Temporarily disable transparency if active
+          (set-frame-parameter nil 'alpha-background 100)
+          (face-background 'default nil t))
+      ;; Restore previous transparency
+      (set-frame-parameter nil 'alpha-background current-alpha))))
+
+(defun thornemacs/capture-default-background ()
+  "Capture and save the theme background color (even if transparency is active)."
+  (setq thornemacs/default-background-color (thornemacs/get-theme-background-color))
+  (message "[thornemacs] Captured theme background: %s" thornemacs/default-background-color))
+
+(defun thornemacs/apply-background ()
+  "Apply the current background color depending on settings."
+  (let ((color (if thornemacs/use-wallust-bg
+                   thornemacs/wallust-background-color
+                 thornemacs/default-background-color)))
+    (set-face-background 'default color (selected-frame))
+    (set-face-background 'fringe color (selected-frame))
+    (message "[thornemacs] Applied background: %s" color)))
+
+;; --- Main toggle functions
+(defun thornemacs/toggle-transparency ()
+  "Toggle transparency on/off."
+  (interactive)
+  (if thornemacs/transparency-enabled
+      (progn
+        (set-frame-parameter nil 'alpha-background 100)
+        (thornemacs/apply-background)
+        (setq thornemacs/transparency-enabled nil)
+        (message "[thornemacs] Transparency disabled."))
+    (progn
+      (set-frame-parameter nil 'alpha-background 80)
+      (set-face-background 'default nil (selected-frame))
+      (set-face-background 'fringe nil (selected-frame))
+      (setq thornemacs/transparency-enabled t)
+      (message "[thornemacs] Transparency enabled."))))
+
+(defun thornemacs/toggle-background-source ()
+  "Toggle between default theme background and Wallust background."
+  (interactive)
+  (setq thornemacs/use-wallust-bg (not thornemacs/use-wallust-bg))
+  (unless thornemacs/transparency-enabled
+    (thornemacs/apply-background))
+  (message "[thornemacs] Background source: %s"
+           (if thornemacs/use-wallust-bg "Wallust" "Default Theme")))
+
+;; --- Setup hooks
+(add-hook 'after-load-theme-hook #'thornemacs/capture-default-background)
+(add-hook 'emacs-startup-hook #'thornemacs/capture-default-background)
+
+;; --- Keybindings
+(global-set-key (kbd "C-c t t") #'thornemacs/toggle-transparency)
+(global-set-key (kbd "C-c t b") #'thornemacs/toggle-background-source)
 #+end_src
 
 *** Dashboard
 
 #+begin_src emacs-lisp
 (use-package dashboard
-  :demand t
-  :init
-  ;; Delay initial-buffer-choice until after dashboard loads
-  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-  :config
-  (dashboard-setup-startup-hook)
-
-  ;; Banner and layout
-  (setq dashboard-startup-banner "./assets/ascii/elias.txt") ; You can use a custom path too
-  (setq dashboard-banner-logo-title "")
-  (setq dashboard-center-content t)
-  (setq dashboard-show-shortcuts nil)
-
-  ;; Dashboard items
-  (setq dashboard-items '((recents  . 5)
-                          (projects . 5)
-                          (agenda   . 5))))
-(setq dashboard-footer-messages
-      (let ((quotes '("#[derive(dumb)]"
-                      "「僕はエリアス・エインズワースかもしれないが、
-                                チセがいない――つまり、僕は完全に『チセレス』だ。」 "
-                      "Sacrifice yourself, or bow to lesser gods...")))
-        (list (nth (random (length quotes)) quotes))))
+  :defer t
+  :init (dashboard-setup-startup-hook)
+  ;; :hook (emacs-startup . dashboard-setup-startup-hook)
+  ;; :hook (after-init . dashboard-setup-startup-hook)
+  :custom
+  (dashboard-startup-banner '3)
+  (dashboard-banner-logo-title "")
+  (dashboard-center-content t)
+  (dashboard-show-shortcuts nil)
+  (dashboard-projects-backend 'projectile)
+  (dashboard-items '((recents  . 3)
+                    (projects . 3)
+                    (agenda   . 3)))
+  (dashboard-footer-messages
+   (let ((quotes '("#[derive(dumb)]"
+                   "「僕はエリアス・エインズワースかもしれないが、\n チセがいない――つまり、僕は完全に『チセレス』だ。」 "
+                   "Sacrifice yourself, or bow to lesser gods...")))
+     (list (nth (random (length quotes)) quotes)))))
 #+end_src
 
 *** Modeline
 
 #+begin_src emacs-lisp
-(use-package nerd-icons)
+(use-package nerd-icons
+  :defer t)
 
 (use-package doom-modeline
+  :defer t
   :hook (after-init . doom-modeline-mode)
-  :init
-  (setq doom-modeline-height 25
-        doom-modeline-bar-width 3
-        doom-modeline-icon t
-        doom-modeline-major-mode-icon t
-        doom-modeline-buffer-file-name-style 'truncate-upto-project))
+  :custom
+  (doom-modeline-height 25)
+  (doom-modeline-bar-width 3)
+  (doom-modeline-icon nil)
+  (doom-modeline-project-detection 'projectile)
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-buffer-file-name-style 'truncate-upto-project))
 #+end_src
 
 *** Indent Guides
@@ -285,10 +469,10 @@ Just use `nix develop`
 
 (use-package highlight-indent-guides
   :hook (prog-mode . thornemacs/enable-indent-guides-safe)
-  :config
-  (setq highlight-indent-guides-method 'character
-        highlight-indent-guides-auto-enabled t
-        highlight-indent-guides-responsive 'top))
+  :custom
+  (highlight-indent-guides-method 'character)
+  (highlight-indent-guides-auto-enabled t)  
+  (highlight-indent-guides-responsive 'top))
 #+end_src
 
 *** Rainbow Mode
@@ -301,11 +485,13 @@ Just use `nix develop`
 *** Smartparens
 
 #+begin_src emacs-lisp
-  (use-package smartparens
-    :init (smartparens-global-mode)
-    :hook (prog-mode . smartparens-mode)
-    :config
-    (require 'smartparens-config))
+(use-package smartparens
+  :hook
+  ((prog-mode . smartparens-mode)
+		 (org-mode . smartparens-mode)
+		 (emacs-lisp-mode . smartparens-mode))
+  :config
+  (require 'smartparens-config))
 #+end_src
 
 ** Navigation
@@ -313,11 +499,10 @@ Just use `nix develop`
 *** Which-key
 
 #+begin_src emacs-lisp
-    (use-package which-key
-      :defer 1
-      :config
-      (which-key-mode)
-      (setq which-key-idle-delay 0.3))
+(use-package which-key
+  :hook (after-init . which-key-mode)
+  :custom
+  (which-key-idle-delay 0.3))
 #+end_src
 
 *** Avy
@@ -364,30 +549,42 @@ Just use `nix develop`
 
 *** Vertico
 #+begin_src emacs-lisp
-  (use-package vertico
-    :init
-    (setq vertico-cycle t)
-    (vertico-mode))
+(use-package vertico
+  :hook (after-init . vertico-mode)
+  :custom
+  (setq vertico-cycle t))
 #+end_src
 
 *** Marginalia
 
 #+begin_src emacs-lisp
     (use-package marginalia
-      :init (marginalia-mode))
+      :hook (after-init . marginalia-mode))
+#+end_src
+
+*** Projectile
+
+#+begin_src emacs-lisp
+(use-package projectile
+  :diminish projectile-mode
+  :custom
+  (projectile-project-search-path '("~/projects/"))
+  (projectile-completion-system 'vertico)
+  (projectile-switch-project-action #'projectile-dired)
+  (projectile-enable-caching t)
+  :hook (after-init . projectile-mode))
 #+end_src
 
 *** Dirvish
 #+begin_src emacs-lisp
 (use-package dirvish
   :after evil
-  :init
-  (dirvish-override-dired-mode)
-  :config
-  (setq dirvish-default-layout '(0 0.25 0.75))
-  (setq dirvish-mode-line-format
+  :hook (after-init . dirvish-override-dired-mode)
+  :custom
+  (dirvish-default-layout '(0 0.25 0.75))
+  (dirvish-mode-line-format
         '(:left (sort symlink) :right (omit yank index)))
-  (setq dirvish-header-line-height 24)
+  (dirvish-header-line-height 24)
 
   ;; Explicitly bind Evil keys to Dirvish (NOT using evil-collection)
   (with-eval-after-load 'dirvish
@@ -431,23 +628,22 @@ Just use `nix develop`
 *** Auto-completion
 
 #+begin_src emacs-lisp
-  (use-package company
-    :init (global-company-mode)
-    :hook ((prog-mode . company-mode)
-  	 (org-mode . company-mode)
-  	 (emacs-lisp-mode . company-mode))
-    :config
-    (setq company-idle-delay 0
-          company-minimum-prefix-length 1
-          company-selection-wrap-around t
-          company-tooltip-align-annotations t
-          company-frontends '(company-pseudo-tooltip-frontend))
-    (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
-    (define-key company-active-map (kbd "RET") nil))
+(use-package company
+  :init (global-company-mode)
+  :hook ((prog-mode . company-mode)
+	 (org-mode . company-mode)
+	 (emacs-lisp-mode . company-mode))
+  :config
+  (setq company-idle-delay 0
+        company-minimum-prefix-length 1
+        company-selection-wrap-around t
+        company-tooltip-align-annotations t
+        company-frontends '(company-pseudo-tooltip-frontend))
+  (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
+  (define-key company-active-map (kbd "C-n") #'company-select-next)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous)
+  (define-key company-active-map (kbd "RET") nil))
 #+end_src
-
 
 *** Togglable LSP System
 
@@ -541,64 +737,67 @@ Just use `nix develop`
 
           (thornemacs/lsp-format-buffer-on-save))
       (error (message "Could not start LSP: %s" (error-message-string err))))))
-
-;; Support for LSP in org-babel code blocks
-;; (defun thornemacs/setup-org-babel-lsp ()
-;;   "Set up LSP support for org-babel code blocks."
-;;   ;; Enable company mode for completions
-;;   (company-mode +1)
-;;
-;;   ;; Add hooks for org-src-mode
-;;   (add-hook 'org-src-mode-hook
-;;             (lambda ()
-;;               ;; When editing a source block, make sure the right LSP is loaded
-;;               (when (org-src-edit-buffer-p) ;; Check if this is actually a src edit buffer
-;;                 (let ((lang (when (boundp 'org-src-lang-modes)
-;;                               (org-src-get-lang-mode (car (org-babel-get-src-block-info t))))))
-;;                   ;; Only try to activate LSP for programming languages
-;;                   (when (and lang (derived-mode-p 'prog-mode))
-;;                     ;; Make sure direnv is loaded
-;;                     (thornemacs/ensure-envrc-before-lsp)
-;;                     ;; Start LSP with a small delay
-;;                     (run-with-timer 0.5 nil #'thornemacs/start-lsp)))))))
 #+end_src
 
 *** LSP Packages Configuration
 
 #+begin_src emacs-lisp
-;; Install and configure both packages
 (use-package eglot
   :commands (eglot eglot-ensure)
-  :config
-  (setq eglot-autoshutdown t))
+  :custom
+  (eglot-autoshutdown t)
+  (eglot-sync-connect nil)
+  (eglot-extend-to-xref nil))
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
-  :config
-  (setq lsp-completion-provider :capf
-        lsp-headerline-breadcrumb-enable nil
-        lsp-enable-on-type-formatting nil
-        lsp-enable-snippet nil
-        lsp-modeline-diagnostics-enable t))
+  :custom
+  (lsp-completion-provider :capf)
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-enable-on-type-formatting nil)
+  (lsp-enable-snippet nil)
+  (lsp-log-io nil)
+  (lsp-modeline-diagnostics-enable t))
 
 (use-package eldoc-box
   :commands (eldoc-box-hover-at-point-mode)
   :hook ((eglot-managed-mode . eldoc-box-hover-at-point-mode)
          (lsp-mode . eldoc-box-hover-at-point-mode)))
-
-;; Add org-mode specific hook for LSP in code blocks
-;; (add-hook 'org-mode-hook #'thornemacs/setup-org-babel-lsp)
 #+end_src
 
 *** Language-specific LSP Setup
 
 #+begin_src emacs-lisp
-
 ;; Install language modes
-(use-package rustic)
-(use-package go-mode)
-(use-package nix-mode)
-(use-package ccls)
+(use-package rustic
+  :mode ("\\.rs\\'" . rustic-mode)
+  :custom
+  (rustic-lsp-client (if (eq thornemacs/lsp-backend 'eglot)
+			 'eglot
+		       'lsp-mode)
+		     rustic-format-on-save nil))
+(use-package go-mode
+  :mode ("\\.go\\'" . go-mode)
+  :custom
+  (gofmt-command (if (executable-find "goimports") "goimports" "gofmt"))
+  (tab-width 4)
+  (indent-tabs-mode t))
+(use-package nix-mode
+  :mode "\\.nix\\'"
+  :custom
+  (nix-indent-function 'nix-indent-line)
+  (nix-mode-use-smie t))
+(use-package ccls
+  :commands (ccls ccls-code-lens-mode)
+  :init
+  (defun my-maybe-activate-ccls ()
+    (when (and (derived-mode-p 'c-mode 'c++-mode)
+               buffer-file-name)
+      (require 'ccls)
+      (if (eq thornemacs/lsp-backend 'eglot)
+          (eglot-ensure)
+        (lsp-deferred))))
+  :hook ((c-mode c++-mode) . my-maybe-activate-ccls))
 
 ;; Set up LSP hooks with our dynamic system
 (defun thornemacs/setup-lang-lsp-hooks ()
@@ -622,23 +821,6 @@ Just use `nix develop`
 ;; Run the hook setup
 (thornemacs/setup-lang-lsp-hooks)
 
-;; Now ensure org-babel code blocks get proper LSP support when editing
-;; (with-eval-after-load 'org
-;;   (advice-add 'org-edit-src-code :after
-;;               (lambda (&rest _)
-;;                 (when (and (derived-mode-p 'prog-mode)
-;;                            (boundp 'org-src-source-file-name)
-;;                            org-src-source-file-name)
-;;                   ;; Check if this is a language we'd want LSP for
-;;                   (let ((lang (when (and (markerp org-src-source-file-name)
-;;                                        (marker-buffer org-src-source-file-name))
-;;                                (buffer-local-value 'org-src-lang-modes
-;;                                                   (marker-buffer org-src-source-file-name)))))
-;;                     (when (and lang (member lang '("rustic" "rust" "go" "nix" "c" "c++" "emacs-lisp")))
-;;                       ;; Start LSP for this edit session
-;;                       (thornemacs/ensure-envrc-before-lsp)
-;;                       (run-with-timer 0.3 nil ;;'thornemacs/start-lsp)))))))
-
 (with-eval-after-load 'org
   ;; Ensure org mode is properly loaded
   (require 'org)
@@ -649,7 +831,6 @@ Just use `nix develop`
    'org-babel-load-languages
    '((rust . t)
      (nix . t)
-     (org . t)
      (emacs-lisp .t))))
 #+end_src
 
@@ -679,17 +860,27 @@ Just use `nix develop`
 *** General Settings
 
 #+begin_src emacs-lisp
-  ;; Auto line wrap
+(use-package org
+  :defer t
+  :mode ("\\.org\\'" . org-mode)
+  ;; :init
+  ;; (setq org-startup-indented t
+  ;;       org-hide-leading-stars t
+  ;;       org-edit-src-content-indentation 0)
+  :custom
+  (org-startup-indented t)
+  (org-hide-leading-stars t)
+  (org-edit-src-content-indentation 0)
+  :config
   (add-hook 'org-mode-hook #'auto-fill-mode)
-
-  ;; Indentation for headings and lists
   (add-hook 'org-mode-hook #'org-indent-mode)
+  (add-hook 'org-mode-hook #'visual-line-mode))
 
-  ;; Visual wrapping (soft word wrap)
-  (add-hook 'org-mode-hook #'visual-line-mode)
+(autoload 'org-mode "org" nil t)
+(autoload 'org-agenda "org-agenda" nil t)
 
-  ;; Optional: Edit code blocks neatly
-  (setq org-edit-src-content-indentation 0)
+(setq org-directory "~/org")
+(setq org-agenda-files '("~/org/agenda"))
 #+end_src
 
 *** Org-modern
@@ -697,30 +888,41 @@ Just use `nix develop`
 #+begin_src emacs-lisp
 (use-package org-modern
   :after org
-  :config
-  (global-org-modern-mode))
+  :hook (org-mode . org-modern-mode))
 #+end_src
 
 *** Org-babel
 
 #+begin_src emacs-lisp
-(with-eval-after-load 'org
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((rust . t)
-     (nix . t)
-     (org . t)
-     (emacs-lisp . t))))
+(use-package org
+  :defer t
+  :custom
+  (org-confirm-babel-evaluate nil)
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (org . t)
+       (rust . t)
+       (nix . t)))))
 #+end_src
 
 *** Org-roam
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :custom (org-roam-directory "~/org-roam")
+  :defer t
+  :custom (org-roam-directory (expand-file-name "~/org/roam"))
   :config (org-roam-db-autosync-mode))
 #+end_src
 
+*** Org-src-mode
+
+#+begin_src emacs-lisp
+(add-hook 'org-src-mode-hook
+          (lambda ()
+            (company-mode 1)))
+#+end_src
 
 ** Magit
 
@@ -730,16 +932,15 @@ Just use `nix develop`
   :bind (("C-x g" . magit-status)         ;; Shortcut to open Magit Status
          ("C-x C-g" . magit-dispatch)    ;; Magit dispatch for other actions
          ("C-x M-g" . magit-blame))       ;; Shortcut for Magit Blame
-  :config
 )
 #+end_src
 
 * TO-DO
 
-- [] Implement more colorschemes because I like way too many of them.
-- [] Add the option for overrides...bc nix.
-- [] Add custom banners and footers.
-- [] Whatever else I come up with lmao.
+- [ ] Implement more colorschemes because I like way too many of them.
+- [ ] Add the option for overrides...bc nix.
+- [ ] Add custom banners and footers.
+- [ ] Whatever else I come up with lmao.
 
 * Credits
 
