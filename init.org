@@ -422,27 +422,29 @@ Just use `nix develop`
 
 #+begin_src emacs-lisp
 (use-package dashboard
-  :defer t
-  ;; :hook (emacs-startup . dashboard-setup-startup-hook)
-  ;; :hook (after-init . dashboard-setup-startup-hook)
+  :demand t
   :init
+  ;; Delay initial-buffer-choice until after dashboard loads
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   :config
   (dashboard-setup-startup-hook)
-  :custom
-  (dashboard-startup-banner '3)
-  (dashboard-banner-logo-title "")
-  (dashboard-center-content t)
-  (dashboard-show-shortcuts nil)
-  (dashboard-projects-backend 'projectile)
-  (dashboard-items '((recents  . 3)
-                    (projects . 3)
-                    (agenda   . 3)))
-  (dashboard-footer-messages
-   (let ((quotes '("#[derive(dumb)]"
-                   "「僕はエリアス・エインズワースかもしれないが、\n チセがいない――つまり、僕は完全に『チセレス』だ。」 "
-                   "Sacrifice yourself, or bow to lesser gods...")))
-     (list (nth (random (length quotes)) quotes)))))
+
+  ;; Banner and layout
+  (setq dashboard-startup-banner '3) ; You can use a custom path too
+  (setq dashboard-banner-logo-title "")
+  (setq dashboard-center-content t)
+  (setq dashboard-show-shortcuts nil)
+
+  ;; Dashboard items
+  (setq dashboard-items '((recents  . 5)
+                          (projects . 5)
+                          (agenda   . 5))))
+(setq dashboard-footer-messages
+      (let ((quotes '("#[derive(dumb)]"
+                      "「僕はエリアス・エインズワースかもしれないが、
+                                チセがいない――つまり、僕は完全に『チセレス』だ。」 "
+                      "Sacrifice yourself, or bow to lesser gods...")))
+        (list (nth (random (length quotes)) quotes))))
 #+end_src
 
 *** Modeline
