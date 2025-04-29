@@ -423,9 +423,12 @@ Just use `nix develop`
 #+begin_src emacs-lisp
 (use-package dashboard
   :defer t
-  :init (dashboard-setup-startup-hook)
   ;; :hook (emacs-startup . dashboard-setup-startup-hook)
   ;; :hook (after-init . dashboard-setup-startup-hook)
+  :init
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+  :config
+  (dashboard-setup-startup-hook)
   :custom
   (dashboard-startup-banner '3)
   (dashboard-banner-logo-title "")
