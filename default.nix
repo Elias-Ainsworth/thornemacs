@@ -27,6 +27,7 @@ emacsWithPackagesFromUsePackage {
       evil-commentary
       embrace
       evil-embrace
+      evil-org
 
       # Git
       magit
@@ -63,8 +64,9 @@ emacsWithPackagesFromUsePackage {
       projectile
       marginalia
       avy
-      consult
       embark
+      consult
+      embark-consult
 
       # UI / Appearance
       catppuccin-theme

@@ -202,6 +202,13 @@ Just use `nix develop`
 (use-package evil-commentary
   :after evil
   :hook (after-init . evil-commentary-mode))
+
+(use-package evil-org
+  :after org
+  :hook (org-mode . (lambda () evil-org-mode))
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 #+end_src
 
 ** UI
@@ -866,26 +873,80 @@ Just use `nix develop`
 
 #+begin_src emacs-lisp
 (use-package org
-  :defer t
   :mode ("\\.org\\'" . org-mode)
-  ;; :init
-  ;; (setq org-startup-indented t
-  ;;       org-hide-leading-stars t
-  ;;       org-edit-src-content-indentation 0)
+  :defer t
+  :init
+  (setq org-directory "~/org"
+        org-agenda-files (list (expand-file-name "agenda" org-directory))
+        org-log-done 'time
+        org-deadline-warning-days 7
+        org-capture-templates
+        `(("t" "Todo" entry
+           (file+headline ,(expand-file-name "agenda/tasks.org" org-directory) "Tasks")
+           "* TODO %?\n %U\n %a")))
+
+  ;; Global keybindings
+  (global-set-key (kbd "C-c c") #'org-capture)
+  (global-set-key (kbd "C-c C-x") #'org-agenda)
+
+  ;; Agenda exporter options (for PDF/HTML output etc.)
+  (setq org-agenda-exporter-settings
+        '((ps-number-columns 2)
+          (ps-landscape-mode t)
+          (htmlize-output-type 'css)))
   :custom
   (org-startup-indented t)
   (org-hide-leading-stars t)
   (org-edit-src-content-indentation 0)
   :config
+  ;; UI hooks
   (add-hook 'org-mode-hook #'auto-fill-mode)
   (add-hook 'org-mode-hook #'org-indent-mode)
-  (add-hook 'org-mode-hook #'visual-line-mode))
+  (add-hook 'org-mode-hook #'visual-line-mode)
 
-(autoload 'org-mode "org" nil t)
-(autoload 'org-agenda "org-agenda" nil t)
+  ;; Evil integration in Agenda (since it's a derived special mode)
+  (add-hook 'org-agenda-mode-hook #'evil-normalize-keymaps))
 
-(setq org-directory "~/org")
-(setq org-agenda-files '("~/org/agenda"))
+;; ;; Optional: make Org buffers prettier (font tweaks, etc.)
+;; (use-package org-modern
+;;   :after org
+;;   :hook (org-mode . org-modern-mode))
+;; (use-package org
+;;   :defer t
+;;   :mode ("\\.org\\'" . org-mode)
+;;   ;; :init
+;;   ;; (setq org-startup-indented t
+;;   ;;       org-hide-leading-stars t
+;;   ;;       org-edit-src-content-indentation 0)
+;;   :custom
+;;   (org-startup-indented t)
+;;   (org-hide-leading-stars t)
+;;   (org-edit-src-content-indentation 0)
+;;   :config
+;;   (add-hook 'org-mode-hook #'auto-fill-mode)
+;;   (add-hook 'org-mode-hook #'org-indent-mode)
+;;   (add-hook 'org-mode-hook #'visual-line-mode))
+
+;; (autoload 'org-mode "org" nil t)
+;; (autoload 'org-agenda "org-agenda" nil t)
+
+;; (setq org-directory "~/org")
+;; (setq org-agenda-files '("~/org/agenda"))
+
+;; (setq org-log-done 'time)
+;; (setq org-deadline-warning-days 7)
+
+;; (setq org-agenda-exporter-settings
+;; 	  '((ps-number-columns 2)
+;; 		(ps-landscape-mode t)
+;; 		(htmlize-output-type 'css)))
+
+;; (expand-file-name "inbox.org" "~/org")
+;; (global-set-key (kbd "C-c c") 'org-capture)
+
+;; (setq org-capture-templates '(("t" "Todo" entry (file+headline "~/org/agenda/tasks.org" "Tasks") "* TODO %?\n %U\n %a")))
+
+;; (global-set-key (kbd "C-c C-x") 'org-agenda)
 #+end_src
 
 *** Org-modern
