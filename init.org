@@ -574,9 +574,10 @@ Just use `nix develop`
 *** Vertico
 #+begin_src emacs-lisp
 (use-package vertico
-  :hook (after-init . vertico-mode)
+  :init
+  (vertico-mode)
   :custom
-  (setq vertico-cycle t))
+  (vertico-cycle t))
 #+end_src
 
 *** Marginalia
@@ -593,7 +594,7 @@ Just use `nix develop`
   :diminish projectile-mode
   :custom
   (projectile-project-search-path '("~/projects/"))
-  (projectile-completion-system 'vertico)
+  (projectile-completion-system 'default)
   (projectile-switch-project-action #'projectile-dired)
   (projectile-enable-caching t)
   (projectile-generic-command "rg --files --hidden --follow -g '!.git/'")
