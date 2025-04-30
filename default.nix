@@ -62,6 +62,7 @@ emacsWithPackagesFromUsePackage {
       vertico
       orderless
       projectile
+      projectile-ripgrep
       marginalia
       avy
       embark
