@@ -19,7 +19,7 @@ emacsWithPackagesFromUsePackage {
       use-package
       babel
       benchmark-init
-      esup
+      vterm
 
       # Evil stack (Vim keybindings)
       evil

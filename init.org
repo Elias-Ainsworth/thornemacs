@@ -256,6 +256,20 @@ Just use `nix develop`
 ;; (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
 #+end_src
 
+*** Wallpaper
+
+#+begin_src emacs-lisp
+(defun run-wallpaper-command (arg)
+  "Run the wallpaper command with an optional argument."
+  (interactive "P")  ; This means it will ask for user input if necessary
+  (let ((command "wallpaper"))  ; Base command
+    (if arg
+        (setq command (concat command " " (read-string "Enter path or command: "))))  ; Ask for the path/command if argument is passed
+    (shell-command command)))  ; Run the command in the shell
+
+(global-set-key (kbd "C-c w w") 'run-wallpaper-command)
+#+end_src
+
 *** Wallust Integration
 
 #+begin_src emacs-lisp
@@ -346,15 +360,16 @@ Just use `nix develop`
                  (thornemacs/start-wallust-bg-watcher))))))
 
 ;; --- Keybinding
-(global-set-key (kbd "C-c w") #'thornemacs/toggle-wallust-background)
+(global-set-key (kbd "C-c w t") #'thornemacs/toggle-wallust-background)
 #+end_src
 
 *** Transparency
 
 #+begin_src emacs-lisp
-;;; thornemacs-transparency-toggle.el --- Transparency and background toggle
+(set-frame-parameter nil 'alpha-background 80)
+(set-face-background 'default nil (selected-frame))
+(set-face-background 'fringe nil (selected-frame))
 
-;; --- Variables
 (defvar thornemacs/transparency-enabled t
   "Whether transparency is currently enabled.")
 
@@ -364,16 +379,13 @@ Just use `nix develop`
 (defvar thornemacs/default-background-color nil
   "Captured background color from the active theme.")
 
-;; --- Helpers
 (defun thornemacs/get-theme-background-color ()
   "Safely capture the solid background color of the current theme."
   (let ((current-alpha (frame-parameter nil 'alpha-background)))
     (unwind-protect
         (progn
-          ;; Temporarily disable transparency if active
           (set-frame-parameter nil 'alpha-background 100)
           (face-background 'default nil t))
-      ;; Restore previous transparency
       (set-frame-parameter nil 'alpha-background current-alpha))))
 
 (defun thornemacs/capture-default-background ()
@@ -584,6 +596,7 @@ Just use `nix develop`
   (projectile-completion-system 'vertico)
   (projectile-switch-project-action #'projectile-dired)
   (projectile-enable-caching t)
+  (projectile-generic-command "rg --files --hidden --follow -g '!.git/'")
   :hook (after-init . projectile-mode))
 #+end_src
 
@@ -865,6 +878,16 @@ Just use `nix develop`
 *** Modeline-Integration (WIP)
 
 #+begin_src emacs-lisp
+#+end_src
+
+** Vterm
+
+#+begin_src emacs-lisp
+(use-package vterm
+  :custom
+  (vterm-shell (executable-find "fish"))
+  :bind
+  ("C-c M-t" . vterm))
 #+end_src
 
 ** Org
