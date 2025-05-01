@@ -209,6 +209,15 @@ Just use `nix develop`
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
+
+(defun thorne/disable-evil-in-terminal-buffers ()
+  "Disable Evil mode in interactive terminal buffers."
+  (when (bound-and-true-p evil-local-mode)
+    (evil-local-mode -1)))
+
+(add-hook 'term-mode-hook #'thorne/disable-evil-in-terminal-buffers)
+(add-hook 'vterm-mode-hook #'thorne/disable-evil-in-terminal-buffers)
+(add-hook 'eshell-mode-hook #'thorne/disable-evil-in-terminal-buffers)
 #+end_src
 
 ** UI
