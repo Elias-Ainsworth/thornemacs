@@ -195,9 +195,16 @@ Just use `nix develop`
 
 (use-package embrace)
 
+(use-package evil-surround
+  :hook ((prog-mode . evil-surround-mode)
+         (org-mode  . evil-surround-mode)))
+
 (use-package evil-embrace
-  :after (evil embrace)
-  :config (evil-embrace-enable-evil-surround-integration))
+  :after (evil evil-surround embrace)
+  :init (evil-embrace-enable-evil-surround-integration)
+  :config
+  (evil-embrace-enable-evil-surround-integration)
+  (add-hook 'org-mode-hook 'embrace-org-mode-hook))
 
 (use-package evil-commentary
   :after evil
@@ -260,7 +267,7 @@ Just use `nix develop`
   ;; Optional: Customize Gruvbox flavor (e.g., light or dark)
   ;; (setq gruvbox-dark-variant 'hard)  ; Use the 'hard' variant of dark mode
   :init
-  (load-theme 'gruvbox t)) 
+  (load-theme 'gruvbox-dark-hard t)) 
 
 ;; (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
 #+end_src
@@ -268,7 +275,7 @@ Just use `nix develop`
 *** Wallpaper
 
 #+begin_src emacs-lisp
-(defun run-wallpaper-command (arg)
+(defun wallpaper (arg)
   "Run the wallpaper command with an optional argument."
   (interactive "P")  ; This means it will ask for user input if necessary
   (let ((command "wallpaper"))  ; Base command
@@ -428,22 +435,12 @@ Just use `nix develop`
       (setq thornemacs/transparency-enabled t)
       (message "[thornemacs] Transparency enabled."))))
 
-(defun thornemacs/toggle-background-source ()
-  "Toggle between default theme background and Wallust background."
-  (interactive)
-  (setq thornemacs/use-wallust-bg (not thornemacs/use-wallust-bg))
-  (unless thornemacs/transparency-enabled
-    (thornemacs/apply-background))
-  (message "[thornemacs] Background source: %s"
-           (if thornemacs/use-wallust-bg "Wallust" "Default Theme")))
-
 ;; --- Setup hooks
 (add-hook 'after-load-theme-hook #'thornemacs/capture-default-background)
 (add-hook 'emacs-startup-hook #'thornemacs/capture-default-background)
 
 ;; --- Keybindings
 (global-set-key (kbd "C-c t t") #'thornemacs/toggle-transparency)
-(global-set-key (kbd "C-c t b") #'thornemacs/toggle-background-source)
 #+end_src
 
 *** Dashboard
@@ -493,19 +490,27 @@ Just use `nix develop`
   (doom-modeline-buffer-file-name-style 'truncate-upto-project))
 #+end_src
 
-*** Indent Guides
+*** TODO Indent Guides
 
 #+begin_src emacs-lisp
-(defun thornemacs/enable-indent-guides-safe ()
-  (when (face-background 'default)
-    (highlight-indent-guides-mode)))
+;; (defun thornemacs/enable-indent-guides-safe ()
+;;   (when (face-background 'default)
+;;     (highlight-indent-guides-mode)))
 
-(use-package highlight-indent-guides
-  :hook (prog-mode . thornemacs/enable-indent-guides-safe)
-  :custom
-  (highlight-indent-guides-method 'character)
-  (highlight-indent-guides-auto-enabled t)  
-  (highlight-indent-guides-responsive 'top))
+;; (use-package highlight-indent-guides
+;;   :hook (prog-mode . thornemacs/enable-indent-guides-safe)
+;;   :custom
+;;   (highlight-indent-guides-method 'character)
+;;   (highlight-indent-guides-auto-enabled t)  
+;;   (highlight-indent-guides-responsive 'top))
+
+;; (use-package highlight-indent-guides
+;;   :hook (prog-mode . highlight-indent-guides-mode)
+;;   :custom
+;;   (highlight-indent-guides-method 'fill) ;; or try 'column
+;;   (highlight-indent-guides-auto-enabled t)
+;;   (highlight-indent-guides-responsive 'top)
+;;   (highlight-indent-guides-delay 0.1))
 #+end_src
 
 *** Rainbow Mode
@@ -796,8 +801,13 @@ Just use `nix develop`
 
 (use-package eldoc-box
   :commands (eldoc-box-hover-at-point-mode)
-  :hook ((eglot-managed-mode . eldoc-box-hover-at-point-mode)
-         (lsp-mode . eldoc-box-hover-at-point-mode)))
+  :bind ("C-c d" . eldoc-box-help-at-point)
+  :custom
+  (eldoc-idle-delay 1.2)          
+  (eldoc-echo-area-use-multiline-p nil)
+  (eldoc-box-only-multi-line t)
+  (eldoc-box-clear-with-C-g t))        
+
 #+end_src
 
 *** Language-specific LSP Setup
@@ -885,7 +895,7 @@ Just use `nix develop`
 (global-set-key (kbd "C-c t m") 'thornemacs/start-lsp-manually-for-lang)
 #+end_src
 
-*** Modeline-Integration (WIP)
+*** TODO Modeline-Integration 
 
 #+begin_src emacs-lisp
 #+end_src
@@ -939,47 +949,6 @@ Just use `nix develop`
 
   ;; Evil integration in Agenda (since it's a derived special mode)
   (add-hook 'org-agenda-mode-hook #'evil-normalize-keymaps))
-
-;; ;; Optional: make Org buffers prettier (font tweaks, etc.)
-;; (use-package org-modern
-;;   :after org
-;;   :hook (org-mode . org-modern-mode))
-;; (use-package org
-;;   :defer t
-;;   :mode ("\\.org\\'" . org-mode)
-;;   ;; :init
-;;   ;; (setq org-startup-indented t
-;;   ;;       org-hide-leading-stars t
-;;   ;;       org-edit-src-content-indentation 0)
-;;   :custom
-;;   (org-startup-indented t)
-;;   (org-hide-leading-stars t)
-;;   (org-edit-src-content-indentation 0)
-;;   :config
-;;   (add-hook 'org-mode-hook #'auto-fill-mode)
-;;   (add-hook 'org-mode-hook #'org-indent-mode)
-;;   (add-hook 'org-mode-hook #'visual-line-mode))
-
-;; (autoload 'org-mode "org" nil t)
-;; (autoload 'org-agenda "org-agenda" nil t)
-
-;; (setq org-directory "~/org")
-;; (setq org-agenda-files '("~/org/agenda"))
-
-;; (setq org-log-done 'time)
-;; (setq org-deadline-warning-days 7)
-
-;; (setq org-agenda-exporter-settings
-;; 	  '((ps-number-columns 2)
-;; 		(ps-landscape-mode t)
-;; 		(htmlize-output-type 'css)))
-
-;; (expand-file-name "inbox.org" "~/org")
-;; (global-set-key (kbd "C-c c") 'org-capture)
-
-;; (setq org-capture-templates '(("t" "Todo" entry (file+headline "~/org/agenda/tasks.org" "Tasks") "* TODO %?\n %U\n %a")))
-
-;; (global-set-key (kbd "C-c C-x") 'org-agenda)
 #+end_src
 
 *** Org-modern
