@@ -283,7 +283,7 @@ Just use `nix develop`
         (setq command (concat command " " (read-string "Enter path or command: "))))  ; Ask for the path/command if argument is passed
     (shell-command command)))  ; Run the command in the shell
 
-(global-set-key (kbd "C-c w w") 'run-wallpaper-command)
+(global-set-key (kbd "C-c w w") 'wallpaper)
 #+end_src
 
 *** Wallust Integration

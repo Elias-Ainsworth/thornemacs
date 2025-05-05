@@ -39,6 +39,7 @@ emacsWithPackagesFromUsePackage {
       org-roam-timestamps
       org-roam-ui
       org-modern
+      htmlize
 
       # Direnv
       envrc
