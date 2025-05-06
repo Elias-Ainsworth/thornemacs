@@ -1,0 +1,1695 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-05-05 Mon 23:39 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ThornEmacs</title>
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style type="text/css">
+:root {
+--bg: #1d2021;
+--bg1: #3c3836;
+--bg2: #504945;
+--bg3: #665c54;
+--fg: #ebdbb2;
+--fg1: #d5c4a1;
+--fg2: #bdae93;
+--red: #fb4934;
+--orange: #fe8019;
+--yellow: #fabd2f;
+--green: #b8bb26;
+--aqua: #8ec07c;
+--blue: #83a598;
+--purple: #d3869b;
+--brown: #d65d0e;
+}
+/* === Base Reset === */
+body {
+background-color: var(--bg);
+color: var(--fg);
+font-family: 'Geist Mono NerdFont', 'JetBrains Mono Nerd Font', 'Geist Mono', 'JetBrains Mono', 'Fira Code', 'Mamelon', 'Noto Sans CJK JP', 'Segoe UI Emoji', 'monospace';
+line-height: 1.6;
+padding: 2em;
+max-width: 80ch;
+margin: auto;
+}
+a {
+color: var(--blue);
+text-decoration: none;
+}
+a:hover {
+text-decoration: underline;
+}
+h1, h2, h3, h4, h5, h6 {
+color: var(--yellow);
+margin-top: 1.5em;
+}
+/* === Code Blocks === */
+code, pre {
+background-color: transparent; /* prevent forced black background */
+color: var(--fg);
+font-family: 'Fira Code', monospace;
+font-variant-ligatures: none;
+}
+pre {
+background-color: var(--bg1);
+padding: 1em;
+border-radius: 4px;
+overflow-x: auto;
+}
+/* Org-mode specific code container */
+.org-src-container {
+background-color: transparent;
+border-left: 1px solid var(--blue);
+padding: 1em;
+margin: 1em 0;
+border-radius: 4px;
+}
+/* Override htmlize inline span background */
+.org-src-container span, pre span {
+background: transparent !important;
+}
+/* === Scrollbar Styling for Code Blocks === */
+.org-src-container::-webkit-scrollbar,
+pre::-webkit-scrollbar {
+height: 8px;
+width: 8px;
+}
+.org-src-container::-webkit-scrollbar-track,
+pre::-webkit-scrollbar-track {
+background: var(--bg1);
+border-radius: 4px;
+}
+.org-src-container::-webkit-scrollbar-thumb,
+pre::-webkit-scrollbar-thumb {
+background-color: var(--bg3);
+border-radius: 4px;
+border: 2px solid var(--bg1);
+}
+.org-src-container::-webkit-scrollbar-thumb:hover,
+pre::-webkit-scrollbar-thumb:hover {
+background-color: var(--fg2);
+}
+/* Optional: Firefox support (limited but helps) */
+.org-src-container,
+pre {
+scrollbar-width: thin;
+scrollbar-color: var(--bg3) var(--bg1);
+}
+/* === Blockquote === */
+blockquote {
+border-left: 2px solid var(--orange);
+padding-left: 1em;
+color: var(--fg1);
+font-style: italic;
+background-color: var(--bg1);
+margin: 1em 0;
+}
+/* === Tables === */
+table {
+border-collapse: collapse;
+width: 100%;
+margin: 1em 0;
+font-size: 0.95em;
+}
+th, td {
+border: 1px solid var(--bg3);
+padding: 0.5em;
+text-align: left;
+}
+th {
+background-color: var(--bg2);
+color: var(--yellow);
+}
+td {
+background-color: var(--bg1);
+}
+/* === Org-mode Extras === */
+.title {
+color: var(--orange);
+font-size: 2em;
+font-weight: bold;
+}
+.subtitle {
+color: var(--fg1);
+font-size: 0.5em;
+}
+.todo {
+color: var(--red);
+font-weight: bold;
+}
+.done {
+color: var(--green);
+font-weight: bold;
+}
+.tag {
+background-color: var(--bg2);
+color: var(--purple);
+padding: 0 0.5em;
+margin-left: 1em;
+border-radius: 3px;
+font-size: 0.9em;
+}
+.footpara, .footdef {
+font-size: 0.9em;
+color: var(--fg2);
+}
+/* === Horizontal Rule === */
+hr {
+border: none;
+border-top: 1px solid var(--bg3);
+margin: 2em 0;
+}
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">ThornEmacs</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgf33a7cc">1. Features</a></li>
+<li><a href="#orgeabfb75">2. Installation</a>
+<ul>
+<li><a href="#org034f2ca">2.1. NixOS</a></li>
+<li><a href="#org717790c">2.2. Legacy *NIX based operating systems</a></li>
+</ul>
+</li>
+<li><a href="#org86e3c17">3. Configuration</a></li>
+<li><a href="#org05b76fc">4. Usage</a></li>
+<li><a href="#org349c371">5. Documentation</a></li>
+<li><a href="#org4cb3d46">6. Hacking</a></li>
+<li><a href="#orgd31ffe4">7. The Actual Config</a>
+<ul>
+<li><a href="#orgba773cc">7.1. Lexical Binding</a></li>
+<li><a href="#orgc6d7e64">7.2. Performance Tweaks</a>
+<ul>
+<li><a href="#orge72b494">7.2.1. Garbage Collection</a></li>
+<li><a href="#orgac88413">7.2.2. Native Compilation</a></li>
+<li><a href="#org45e8639">7.2.3. File Operations</a></li>
+<li><a href="#org16c8ddd">7.2.4. Package Loading Order</a></li>
+</ul>
+</li>
+<li><a href="#orgd016eef">7.3. Auto-Tangle on Save</a></li>
+<li><a href="#orgdab0b3d">7.4. Bootstrap <code>use-package</code></a></li>
+<li><a href="#orgbea31b6">7.5. Benchmarking</a></li>
+<li><a href="#org3b21e8c">7.6. Recentf</a></li>
+<li><a href="#org2de923f">7.7. Evil Mode</a></li>
+<li><a href="#org18c990f">7.8. UI</a>
+<ul>
+<li><a href="#org0874a04">7.8.1. Disable Default GUI Elements</a></li>
+<li><a href="#org9dc253a">7.8.2. Font sizing</a></li>
+<li><a href="#org249dbb9">7.8.3. Theme</a></li>
+<li><a href="#orgb064f7b">7.8.4. Wallpaper</a></li>
+<li><a href="#org84b2c8d">7.8.5. Wallust Integration</a></li>
+<li><a href="#org57df689">7.8.6. Transparency</a></li>
+<li><a href="#org9541bf6">7.8.7. Dashboard</a></li>
+<li><a href="#org942fb53">7.8.8. Modeline</a></li>
+<li><a href="#orgbdacd1f">7.8.9. <span class="todo TODO">TODO</span> Indent Guides</a></li>
+<li><a href="#org134fc93">7.8.10. Rainbow Mode</a></li>
+<li><a href="#orgc0d64e1">7.8.11. Smartparens</a></li>
+</ul>
+</li>
+<li><a href="#orge512503">7.9. Navigation</a>
+<ul>
+<li><a href="#orgf8ea43c">7.9.1. Which-key</a></li>
+<li><a href="#org56924c3">7.9.2. Avy</a></li>
+<li><a href="#org39e80c8">7.9.3. Consult</a></li>
+<li><a href="#orgeeacf01">7.9.4. Embark</a></li>
+<li><a href="#orgeab76f7">7.9.5. Orderless</a></li>
+<li><a href="#org0a5d1d6">7.9.6. Vertico</a></li>
+<li><a href="#org9a22c2c">7.9.7. Marginalia</a></li>
+<li><a href="#org683480b">7.9.8. Projectile</a></li>
+<li><a href="#org6fb8e14">7.9.9. Dirvish</a></li>
+</ul>
+</li>
+<li><a href="#org0087d69">7.10. Direnv</a></li>
+<li><a href="#org76d53b6">7.11. LSP</a>
+<ul>
+<li><a href="#org8b13681">7.11.1. Auto-completion</a></li>
+<li><a href="#org9876d67">7.11.2. Togglable LSP System</a></li>
+<li><a href="#org517e52a">7.11.3. LSP Packages Configuration</a></li>
+<li><a href="#orgaf1c5d6">7.11.4. Language-specific LSP Setup</a></li>
+<li><a href="#org120b711">7.11.5. Org-Integration</a></li>
+<li><a href="#orgab09b2f">7.11.6. <span class="todo TODO">TODO</span> Modeline-Integration</a></li>
+</ul>
+</li>
+<li><a href="#org9438ae3">7.12. Vterm</a></li>
+<li><a href="#orga5c38fb">7.13. Org</a>
+<ul>
+<li><a href="#org291dd74">7.13.1. General Settings</a></li>
+<li><a href="#orgb452d74">7.13.2. Fix things <code>(thornemacs/load_wallust_bg_from_json)</code> messes up.</a></li>
+<li><a href="#org391407a">7.13.3. Org-modern</a></li>
+<li><a href="#orge739b1f">7.13.4. Org-babel</a></li>
+<li><a href="#orgf9102fb">7.13.5. Org-roam</a></li>
+<li><a href="#org2b1fbfe">7.13.6. Org-src-mode</a></li>
+</ul>
+</li>
+<li><a href="#org5a1c133">7.14. Magit</a></li>
+</ul>
+</li>
+<li><a href="#orgd9a374b">8. TO-DO</a></li>
+<li><a href="#org5eb882a">9. Credits</a></li>
+</ul>
+</div>
+</div>
+<p>
+ThornEmacs is my personalized configuration of emacs, using the
+<a href="https://github.com/nix-community/emacs-overlay">emacs-overlay for nixpkgs</a>. Customized to enhance productivity and
+devolopment workflows&#x2026;and basically function like my neovim config:
+<a href="https://github.com/Elias-Ainsworth/thornevim">ThorneVim</a>.
+</p>
+<div id="outline-container-orgf33a7cc" class="outline-2">
+<h2 id="orgf33a7cc"><span class="section-number-2">1.</span> Features</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>A custom function to togglg between <code>eglot</code> (default) and <code>lsp-mode</code>.</li>
+<li>A custom function to set the background to a the background color
+determinied by wallust.</li>
+</ul>
+<p>
+Among other things (I'll get to this once I actually finish this
+damned config).
+</p>
+</div>
+</div>
+<div id="outline-container-orgeabfb75" class="outline-2">
+<h2 id="orgeabfb75"><span class="section-number-2">2.</span> Installation</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org034f2ca" class="outline-3">
+<h3 id="org034f2ca"><span class="section-number-3">2.1.</span> NixOS</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Include the following input in your <code>flake.nix</code> file:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nix">{
+  <span style="color: #83a598;">inputs.thornemacs.url</span> = <span style="color: #b8bb26;">"github:Elias-Ainsworth/thornemacs"</span>;
+}
+</pre>
+</div>
+
+<p>
+Then include it in your <code>environment.systemPackages</code> or
+<code>home.packages</code> by referencing the input:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nix">inputs.thornemacs.packages.${pkgs.system}.default
+</pre>
+</div>
+
+<p>
+Alternatively, it can also be run directly:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-console">nix run github:Elias-Ainsworth/thornemacs
+</pre>
+</div>
+
+<p>
+Overrides coming soon&#x2026;
+</p>
+</div>
+</div>
+<div id="outline-container-org717790c" class="outline-3">
+<h3 id="org717790c"><span class="section-number-3">2.2.</span> Legacy *NIX based operating systems</h3>
+<div class="outline-text-3" id="text-2-2">
+<ol class="org-ol">
+<li><a href="https://nix-community.github.io/home-manager/">Install home-manager</a></li>
+<li>Then go back to the section on <a href="#org034f2ca">NixOS</a> and follow those steps.</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org86e3c17" class="outline-2">
+<h2 id="org86e3c17"><span class="section-number-2">3.</span> Configuration</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+To configure this&#x2026;configuration to your liking:
+</p>
+<ol class="org-ol">
+<li>If the configuration involves a package add it to the
+<code>extraEmacsPackages</code> section in <a href="default.nix">default.nix</a>.</li>
+<li>Set it up by editing this file (yes the README file) under the
+<a href="#orgd31ffe4">configuration</a> section.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org05b76fc" class="outline-2">
+<h2 id="org05b76fc"><span class="section-number-2">4.</span> Usage</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+You're kidding me right? It's emacs (with evil-mode)&#x2026;use it like
+emacs (with evil-mode).
+</p>
+</div>
+</div>
+<div id="outline-container-org349c371" class="outline-2">
+<h2 id="org349c371"><span class="section-number-2">5.</span> Documentation</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+This is more for my reference than anything else. But if you would
+like to view my documentation, check out <a href="docs/">./docs</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-org4cb3d46" class="outline-2">
+<h2 id="org4cb3d46"><span class="section-number-2">6.</span> Hacking</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Just use <code>nix develop</code>
+</p>
+</div>
+</div>
+<div id="outline-container-orgd31ffe4" class="outline-2">
+<h2 id="orgd31ffe4"><span class="section-number-2">7.</span> The Actual Config</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-orgba773cc" class="outline-3">
+<h3 id="orgba773cc"><span class="section-number-3">7.1.</span> Lexical Binding</h3>
+<div class="outline-text-3" id="text-7-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #7c6f64;">;;; </span><span style="color: #7c6f64;">-*- lexical-binding: t -*-</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc6d7e64" class="outline-3">
+<h3 id="orgc6d7e64"><span class="section-number-3">7.2.</span> Performance Tweaks</h3>
+<div class="outline-text-3" id="text-7-2">
+</div>
+<div id="outline-container-orge72b494" class="outline-4">
+<h4 id="orge72b494"><span class="section-number-4">7.2.1.</span> Garbage Collection</h4>
+<div class="outline-text-4" id="text-7-2-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Speed up startup by raising GC limits</span>
+(<span style="color: #fb4933;">setq</span> gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6)
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Temporarily disable file-name handlers</span>
+(<span style="color: #fb4933;">defvar</span> <span style="color: #83a598;">original-file-name-handler-alist</span> file-name-handler-alist)
+(<span style="color: #fb4933;">setq</span> file-name-handler-alist nil)
+
+(add-hook 'emacs-startup-hook
+          (<span style="color: #fb4933;">lambda</span> ()
+            <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Restore sane defaults</span>
+            (<span style="color: #fb4933;">setq</span> gc-cons-threshold (* 100 1024 1024) <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">100MB</span>
+                  gc-cons-percentage 0.1
+                  file-name-handler-alist original-file-name-handler-alist)
+            (message <span style="color: #b8bb26;">"Emacs ready in %.2f seconds with %d GCs."</span>
+                     (float-time (time-subtract after-init-time before-init-time))
+                     gcs-done)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgac88413" class="outline-4">
+<h4 id="orgac88413"><span class="section-number-4">7.2.2.</span> Native Compilation</h4>
+<div class="outline-text-4" id="text-7-2-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">when</span> (<span style="color: #fb4933;">and</span> (fboundp 'native-comp-available-p)
+           (native-comp-available-p))
+  (<span style="color: #fb4933;">setq</span> native-comp-async-report-warnings-errors nil
+        native-comp-deferred-compilation t))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org45e8639" class="outline-4">
+<h4 id="org45e8639"><span class="section-number-4">7.2.3.</span> File Operations</h4>
+<div class="outline-text-4" id="text-7-2-3">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Delay file handlers until needed</span>
+(<span style="color: #fb4933;">setq</span> file-name-handler-alist-original file-name-handler-alist
+      file-name-handler-alist nil)
+
+(add-hook 'emacs-startup-hook
+          (<span style="color: #fb4933;">lambda</span> ()
+            (<span style="color: #fb4933;">setq</span> file-name-handler-alist file-name-handler-alist-original
+                  file-name-handler-alist-original nil)
+            (message <span style="color: #b8bb26;">"Emacs loaded in %s with %d garbage collections."</span>
+                    (format <span style="color: #b8bb26;">"%.2f seconds"</span>
+                            (float-time (time-subtract after-init-time before-init-time)))
+                    gcs-done)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org16c8ddd" class="outline-4">
+<h4 id="org16c8ddd"><span class="section-number-4">7.2.4.</span> Package Loading Order</h4>
+<div class="outline-text-4" id="text-7-2-4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">setq</span> package-enable-at-startup nil)
+(<span style="color: #fb4933;">setq</span> inhibit-startup-message t)
+(<span style="color: #fb4933;">setq</span> initial-scratch-message nil)
+(<span style="color: #fb4933;">setq</span> frame-inhibit-implied-resize t)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd016eef" class="outline-3">
+<h3 id="orgd016eef"><span class="section-number-3">7.3.</span> Auto-Tangle on Save</h3>
+<div class="outline-text-3" id="text-7-3">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">auto-tangle-config</span> ()
+  (<span style="color: #fb4933;">when</span> (string-equal (buffer-file-name)
+                      (expand-file-name <span style="color: #b8bb26;">"init.org"</span> user-emacs-directory))
+    (<span style="color: #fb4933;">let</span> ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+
+(add-hook 'org-mode-hook
+          (<span style="color: #fb4933;">lambda</span> ()
+            (add-hook 'after-save-hook #'auto-tangle-config nil 'local)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdab0b3d" class="outline-3">
+<h3 id="orgdab0b3d"><span class="section-number-3">7.4.</span> Bootstrap <code>use-package</code></h3>
+<div class="outline-text-3" id="text-7-4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">require</span> '<span style="color: #d3869b;">use-package</span>)
+(<span style="color: #fb4933;">setq</span> use-package-always-ensure t
+      use-package-always-defer t
+      use-package-expand-minimally t)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbea31b6" class="outline-3">
+<h3 id="orgbea31b6"><span class="section-number-3">7.5.</span> Benchmarking</h3>
+<div class="outline-text-3" id="text-7-5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> benchmark-init
+  <span style="color: #fe8019;">:config</span>
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3b21e8c" class="outline-3">
+<h3 id="org3b21e8c"><span class="section-number-3">7.6.</span> Recentf</h3>
+<div class="outline-text-3" id="text-7-6">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> recentf
+  <span style="color: #fe8019;">:init</span>
+  (<span style="color: #fb4933;">setq</span> recentf-max-saved-items 100
+        recentf-max-menu-items 15)
+  <span style="color: #fe8019;">:hook</span> (after-init . (<span style="color: #fb4933;">lambda</span> ()
+                         (run-with-timer 1 nil #'recentf-mode))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org2de923f" class="outline-3">
+<h3 id="org2de923f"><span class="section-number-3">7.7.</span> Evil Mode</h3>
+<div class="outline-text-3" id="text-7-7">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Prevent conflicts with evil-collection</span>
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">(setq evil-want-keybinding nil)</span>
+
+(<span style="color: #fb4933;">use-package</span> evil
+  <span style="color: #fe8019;">:demand</span> t
+  <span style="color: #fe8019;">:custom</span>
+  (evil-want-keybinding nil)
+  <span style="color: #fe8019;">:init</span>
+  (evil-mode 1))
+
+ (<span style="color: #fb4933;">use-package</span> evil-collection
+   <span style="color: #fe8019;">:after</span> evil
+   <span style="color: #fe8019;">:hook</span> (after-init . evil-collection-init))
+
+(<span style="color: #fb4933;">use-package</span> embrace)
+
+(<span style="color: #fb4933;">use-package</span> evil-surround
+  <span style="color: #fe8019;">:hook</span> ((prog-mode . evil-surround-mode)
+         (org-mode  . evil-surround-mode)))
+
+(<span style="color: #fb4933;">use-package</span> evil-embrace
+  <span style="color: #fe8019;">:after</span> (evil evil-surround embrace)
+  <span style="color: #fe8019;">:init</span> (evil-embrace-enable-evil-surround-integration)
+  <span style="color: #fe8019;">:config</span>
+  (evil-embrace-enable-evil-surround-integration)
+  (add-hook 'org-mode-hook 'embrace-org-mode-hook))
+
+(<span style="color: #fb4933;">use-package</span> evil-commentary
+  <span style="color: #fe8019;">:after</span> evil
+  <span style="color: #fe8019;">:hook</span> (after-init . evil-commentary-mode))
+
+(<span style="color: #fb4933;">use-package</span> evil-org
+  <span style="color: #fe8019;">:after</span> org
+  <span style="color: #fe8019;">:hook</span> (org-mode . (<span style="color: #fb4933;">lambda</span> () evil-org-mode))
+  <span style="color: #fe8019;">:config</span>
+  (<span style="color: #fb4933;">require</span> '<span style="color: #d3869b;">evil-org-agenda</span>)
+  (evil-org-agenda-set-keys))
+
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thorne/disable-evil-in-terminal-buffers</span> ()
+  <span style="color: #b8bb26;">"Disable Evil mode in interactive terminal buffers."</span>
+  (<span style="color: #fb4933;">when</span> (<span style="color: #fb4933;">bound-and-true-p</span> evil-local-mode)
+    (evil-local-mode -1)))
+
+(add-hook 'term-mode-hook #'thorne/disable-evil-in-terminal-buffers)
+(add-hook 'vterm-mode-hook #'thorne/disable-evil-in-terminal-buffers)
+(add-hook 'eshell-mode-hook #'thorne/disable-evil-in-terminal-buffers)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org18c990f" class="outline-3">
+<h3 id="org18c990f"><span class="section-number-3">7.8.</span> UI</h3>
+<div class="outline-text-3" id="text-7-8">
+</div>
+<div id="outline-container-org0874a04" class="outline-4">
+<h4 id="org0874a04"><span class="section-number-4">7.8.1.</span> Disable Default GUI Elements</h4>
+<div class="outline-text-4" id="text-7-8-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Disable UI chrome early</span>
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+(<span style="color: #fb4933;">setq</span> window-divider-default-right-width 0)
+(<span style="color: #fb4933;">setq</span> window-divider-default-bottom-width 0)
+(window-divider-mode -1)
+
+(add-to-list 'default-frame-alist '(internal-border-width . 0))
+(set-frame-parameter nil 'internal-border-width 0)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9dc253a" class="outline-4">
+<h4 id="org9dc253a"><span class="section-number-4">7.8.2.</span> Font sizing</h4>
+<div class="outline-text-4" id="text-7-8-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">let</span> ((current-font (face-attribute 'default <span style="color: #fe8019;">:family</span>)))
+  (set-face-attribute 'default nil
+    <span style="color: #fe8019;">:family</span> current-font
+    <span style="color: #fe8019;">:height</span> 120))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org249dbb9" class="outline-4">
+<h4 id="org249dbb9"><span class="section-number-4">7.8.3.</span> Theme</h4>
+<div class="outline-text-4" id="text-7-8-3">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">(use-package catppuccin-theme</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">:config (setq catppuccin-flavor 'mocha)</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">:init (load-theme 'catppuccin :no-confirm))</span>
+
+(<span style="color: #fb4933;">use-package</span> gruvbox-theme
+  <span style="color: #fe8019;">:defer</span> nil
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">:config</span>
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Optional: Customize Gruvbox flavor (e.g., light or dark)</span>
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">(setq gruvbox-dark-variant 'hard)  ; Use the '</span><span style="color: #d3869b;">hard</span><span style="color: #7c6f64;">' variant of dark mode</span>
+  <span style="color: #fe8019;">:init</span>
+  (load-theme 'gruvbox-dark-hard t)) 
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">(add-hook 'server-after-make-frame-hook #'catppuccin-reload)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb064f7b" class="outline-4">
+<h4 id="orgb064f7b"><span class="section-number-4">7.8.4.</span> Wallpaper</h4>
+<div class="outline-text-4" id="text-7-8-4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">wallpaper</span> (arg)
+  <span style="color: #b8bb26;">"Run the wallpaper command with an optional argument."</span>
+  (<span style="color: #fb4933;">interactive</span> <span style="color: #b8bb26;">"P"</span>)  <span style="color: #7c6f64;">; </span><span style="color: #7c6f64;">This means it will ask for user input if necessary</span>
+  (<span style="color: #fb4933;">let</span> ((command <span style="color: #b8bb26;">"wallpaper"</span>))  <span style="color: #7c6f64;">; </span><span style="color: #7c6f64;">Base command</span>
+    (<span style="color: #fb4933;">if</span> arg
+        (<span style="color: #fb4933;">setq</span> command (concat command <span style="color: #b8bb26;">" "</span> (read-string <span style="color: #b8bb26;">"Enter path or command: "</span>))))  <span style="color: #7c6f64;">; </span><span style="color: #7c6f64;">Ask for the path/command if argument is passed</span>
+    (shell-command command)))  <span style="color: #7c6f64;">; </span><span style="color: #7c6f64;">Run the command in the shell</span>
+
+(global-set-key (kbd <span style="color: #b8bb26;">"C-c w w"</span>) 'wallpaper)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org84b2c8d" class="outline-4">
+<h4 id="org84b2c8d"><span class="section-number-4">7.8.5.</span> Wallust Integration</h4>
+<div class="outline-text-4" id="text-7-8-5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">require</span> '<span style="color: #d3869b;">json</span>)
+(<span style="color: #fb4933;">require</span> '<span style="color: #d3869b;">filenotify</span>)
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">--- Variables</span>
+
+(<span style="color: #fb4933;">defvar</span> <span style="color: #83a598;">thornemacs/wallust-json-path</span> <span style="color: #b8bb26;">"~/.cache/wallust/nix.json"</span>)
+(<span style="color: #fb4933;">defvar</span> <span style="color: #83a598;">thornemacs/wallust-watch-descriptor</span> nil)
+(<span style="color: #fb4933;">defvar</span> <span style="color: #83a598;">thornemacs/wallust-enabled</span> t
+  <span style="color: #b8bb26;">"Whether Wallust background is currently active."</span>)
+
+(<span style="color: #fb4933;">defvar</span> <span style="color: #83a598;">thornemacs/theme-default-background</span> nil
+  <span style="color: #b8bb26;">"Default theme background color before Wallust is applied."</span>)
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">--- Functions</span>
+
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/capture-theme-background</span> ()
+  <span style="color: #b8bb26;">"Capture the current theme background color before Wallust applies."</span>
+  (<span style="color: #fb4933;">unless</span> thornemacs/theme-default-background <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Only capture once</span>
+    (<span style="color: #fb4933;">setq</span> thornemacs/theme-default-background (face-background 'default nil t))
+    (message <span style="color: #b8bb26;">"[thornemacs] Captured theme background: %s"</span> thornemacs/theme-default-background)))
+
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/load-wallust-bg-from-json</span> ()
+  <span style="color: #b8bb26;">"Load Wallust background color from JSON and apply it."</span>
+  (<span style="color: #fb4933;">when</span> (file-exists-p thornemacs/wallust-json-path)
+    (<span style="color: #fb4933;">let*</span> ((json-object-type 'alist)
+           (json (<span style="color: #fb4933;">with-temp-buffer</span>
+                   (insert-file-contents thornemacs/wallust-json-path)
+                   (json-read)))
+           (bg (alist-get 'background (alist-get 'special json))))
+      (<span style="color: #fb4933;">when</span> (<span style="color: #fb4933;">and</span> bg (stringp bg))
+        (set-face-background 'default bg (selected-frame))
+        (set-face-background 'fringe bg (selected-frame))
+        (message <span style="color: #b8bb26;">"[thornemacs] Wallust background applied: %s"</span> bg)))))
+
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/restore-theme-background</span> ()
+  <span style="color: #b8bb26;">"Restore the original theme background."</span>
+  (<span style="color: #fb4933;">when</span> thornemacs/theme-default-background
+    (set-face-background 'default thornemacs/theme-default-background (selected-frame))
+    (set-face-background 'fringe thornemacs/theme-default-background (selected-frame))
+    (message <span style="color: #b8bb26;">"[thornemacs] Theme background restored: %s"</span> thornemacs/theme-default-background)))
+
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/toggle-wallust-background</span> ()
+  <span style="color: #b8bb26;">"Toggle between Wallust background and theme background."</span>
+  (<span style="color: #fb4933;">interactive</span>)
+  (<span style="color: #fb4933;">setq</span> thornemacs/wallust-enabled (not thornemacs/wallust-enabled))
+  (<span style="color: #fb4933;">if</span> thornemacs/wallust-enabled
+      (thornemacs/load-wallust-bg-from-json)
+    (thornemacs/restore-theme-background)))
+
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/start-wallust-bg-watcher</span> ()
+  <span style="color: #b8bb26;">"Start watching Wallust JSON for changes."</span>
+  (<span style="color: #fb4933;">interactive</span>)
+  (<span style="color: #fb4933;">unless</span> (<span style="color: #fb4933;">and</span> thornemacs/wallust-watch-descriptor
+               (file-notify-valid-p thornemacs/wallust-watch-descriptor))
+    (<span style="color: #fb4933;">when</span> (file-exists-p thornemacs/wallust-json-path)
+      (<span style="color: #fb4933;">setq</span> thornemacs/wallust-watch-descriptor
+            (file-notify-add-watch
+             thornemacs/wallust-json-path
+             '(change)
+             (<span style="color: #fb4933;">lambda</span> (_event)
+               (<span style="color: #fb4933;">when</span> thornemacs/wallust-enabled
+                 (thornemacs/load-wallust-bg-from-json))))))
+    (message <span style="color: #b8bb26;">"[thornemacs] Started watching Wallust JSON."</span>)))
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">--- Setup hooks properly</span>
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">When Emacs starts, capture the theme background after first frame</span>
+(add-hook 'window-setup-hook #'thornemacs/capture-theme-background)
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Also capture it every time a theme is loaded</span>
+(add-hook 'after-load-theme-hook (<span style="color: #fb4933;">lambda</span> ()
+                                   (<span style="color: #fb4933;">setq</span> thornemacs/theme-default-background nil) <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Clear cached value</span>
+                                   (thornemacs/capture-theme-background)
+                                   (<span style="color: #fb4933;">when</span> (not thornemacs/wallust-enabled)
+                                     (thornemacs/restore-theme-background))))
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Load Wallust bg *after* capturing default</span>
+(add-hook 'emacs-startup-hook
+          (<span style="color: #fb4933;">lambda</span> ()
+            (run-with-timer
+             1 nil <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">small delay to let everything settle</span>
+             (<span style="color: #fb4933;">lambda</span> ()
+               (<span style="color: #fb4933;">when</span> thornemacs/wallust-enabled
+                 (thornemacs/load-wallust-bg-from-json)
+                 (thornemacs/start-wallust-bg-watcher))))))
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">--- Keybinding</span>
+(global-set-key (kbd <span style="color: #b8bb26;">"C-c w t"</span>) #'thornemacs/toggle-wallust-background)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org57df689" class="outline-4">
+<h4 id="org57df689"><span class="section-number-4">7.8.6.</span> Transparency</h4>
+<div class="outline-text-4" id="text-7-8-6">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(set-frame-parameter nil 'alpha-background 80)
+(set-face-background 'default nil (selected-frame))
+(set-face-background 'fringe nil (selected-frame))
+
+(<span style="color: #fb4933;">defvar</span> <span style="color: #83a598;">thornemacs/transparency-enabled</span> t
+  <span style="color: #b8bb26;">"Whether transparency is currently enabled."</span>)
+
+(<span style="color: #fb4933;">defvar</span> <span style="color: #83a598;">thornemacs/use-wallust-bg</span> nil
+  <span style="color: #b8bb26;">"Whether to use Wallust background color instead of default."</span>)
+
+(<span style="color: #fb4933;">defvar</span> <span style="color: #83a598;">thornemacs/default-background-color</span> nil
+  <span style="color: #b8bb26;">"Captured background color from the active theme."</span>)
+
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/get-theme-background-color</span> ()
+  <span style="color: #b8bb26;">"Safely capture the solid background color of the current theme."</span>
+  (<span style="color: #fb4933;">let</span> ((current-alpha (frame-parameter nil 'alpha-background)))
+    (<span style="color: #fb4933;">unwind-protect</span>
+        (<span style="color: #fb4933;">progn</span>
+          (set-frame-parameter nil 'alpha-background 100)
+          (face-background 'default nil t))
+      (set-frame-parameter nil 'alpha-background current-alpha))))
+
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/capture-default-background</span> ()
+  <span style="color: #b8bb26;">"Capture and save the theme background color (even if transparency is active)."</span>
+  (<span style="color: #fb4933;">setq</span> thornemacs/default-background-color (thornemacs/get-theme-background-color))
+  (message <span style="color: #b8bb26;">"[thornemacs] Captured theme background: %s"</span> thornemacs/default-background-color))
+
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/apply-background</span> ()
+  <span style="color: #b8bb26;">"Apply the current background color depending on settings."</span>
+  (<span style="color: #fb4933;">let</span> ((color (<span style="color: #fb4933;">if</span> thornemacs/use-wallust-bg
+                   thornemacs/wallust-background-color
+                 thornemacs/default-background-color)))
+    (set-face-background 'default color (selected-frame))
+    (set-face-background 'fringe color (selected-frame))
+    (message <span style="color: #b8bb26;">"[thornemacs] Applied background: %s"</span> color)))
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">--- Main toggle functions</span>
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/toggle-transparency</span> ()
+  <span style="color: #b8bb26;">"Toggle transparency on/off."</span>
+  (<span style="color: #fb4933;">interactive</span>)
+  (<span style="color: #fb4933;">if</span> thornemacs/transparency-enabled
+      (<span style="color: #fb4933;">progn</span>
+        (set-frame-parameter nil 'alpha-background 100)
+        (thornemacs/apply-background)
+        (<span style="color: #fb4933;">setq</span> thornemacs/transparency-enabled nil)
+        (message <span style="color: #b8bb26;">"[thornemacs] Transparency disabled."</span>))
+    (<span style="color: #fb4933;">progn</span>
+      (set-frame-parameter nil 'alpha-background 80)
+      (set-face-background 'default nil (selected-frame))
+      (set-face-background 'fringe nil (selected-frame))
+      (<span style="color: #fb4933;">setq</span> thornemacs/transparency-enabled t)
+      (message <span style="color: #b8bb26;">"[thornemacs] Transparency enabled."</span>))))
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">--- Setup hooks</span>
+(add-hook 'after-load-theme-hook #'thornemacs/capture-default-background)
+(add-hook 'emacs-startup-hook #'thornemacs/capture-default-background)
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">--- Keybindings</span>
+(global-set-key (kbd <span style="color: #b8bb26;">"C-c t t"</span>) #'thornemacs/toggle-transparency)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9541bf6" class="outline-4">
+<h4 id="org9541bf6"><span class="section-number-4">7.8.7.</span> Dashboard</h4>
+<div class="outline-text-4" id="text-7-8-7">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> dashboard
+  <span style="color: #fe8019;">:demand</span> t
+  <span style="color: #fe8019;">:init</span>
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Delay initial-buffer-choice until after dashboard loads</span>
+  (<span style="color: #fb4933;">setq</span> initial-buffer-choice (<span style="color: #fb4933;">lambda</span> () (get-buffer-create <span style="color: #b8bb26;">"*dashboard*"</span>)))
+  <span style="color: #fe8019;">:config</span>
+  (dashboard-setup-startup-hook)
+
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Banner and layout</span>
+  (<span style="color: #fb4933;">setq</span> dashboard-startup-banner (cons <span style="color: #b8bb26;">"~/.config/emacs/assets/images/chise.png"</span> <span style="color: #b8bb26;">"~/.config/emacs/assets/ascii/eepy.txt"</span>)) <span style="color: #7c6f64;">; </span><span style="color: #7c6f64;">You can use a custom path too</span>
+  (<span style="color: #fb4933;">setq</span> dashboard-banner-logo-title <span style="color: #b8bb26;">""</span>)
+  (<span style="color: #fb4933;">setq</span> dashboard-center-content t)
+  (<span style="color: #fb4933;">setq</span> dashboard-show-shortcuts nil)
+
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Dashboard items</span>
+  (<span style="color: #fb4933;">setq</span> dashboard-items '((recents  . 5)
+                          (projects . 5)
+                          (agenda   . 5))))
+(<span style="color: #fb4933;">setq</span> dashboard-footer-messages
+      (<span style="color: #fb4933;">let</span> ((quotes '(<span style="color: #b8bb26;">"#[derive(dumb)]"</span>
+                      <span style="color: #b8bb26;">"&#12300;&#20693;&#12399;&#12456;&#12522;&#12450;&#12473;&#12539;&#12456;&#12452;&#12531;&#12474;&#12527;&#12540;&#12473;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;&#12364;&#12289;</span>
+<span style="color: #b8bb26;">                                &#12481;&#12475;&#12364;&#12356;&#12394;&#12356;&#8213;&#8213;&#12388;&#12414;&#12426;&#12289;&#20693;&#12399;&#23436;&#20840;&#12395;&#12302;&#12481;&#12475;&#12524;&#12473;&#12303;&#12384;&#12290;&#12301; "</span>
+                      <span style="color: #b8bb26;">"Sacrifice yourself, or bow to lesser gods..."</span>)))
+        (list (nth (random (length quotes)) quotes))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org942fb53" class="outline-4">
+<h4 id="org942fb53"><span class="section-number-4">7.8.8.</span> Modeline</h4>
+<div class="outline-text-4" id="text-7-8-8">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> nerd-icons
+  <span style="color: #fe8019;">:defer</span> t)
+
+(<span style="color: #fb4933;">use-package</span> doom-modeline
+  <span style="color: #fe8019;">:defer</span> t
+  <span style="color: #fe8019;">:hook</span> (after-init . doom-modeline-mode)
+  <span style="color: #fe8019;">:custom</span>
+  (doom-modeline-height 25)
+  (doom-modeline-bar-width 3)
+  (doom-modeline-icon nil)
+  (doom-modeline-project-detection 'projectile)
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-buffer-file-name-style 'truncate-upto-project))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbdacd1f" class="outline-4">
+<h4 id="orgbdacd1f"><span class="section-number-4">7.8.9.</span> <span class="todo TODO">TODO</span> Indent Guides</h4>
+<div class="outline-text-4" id="text-7-8-9">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">(defun thornemacs/enable-indent-guides-safe ()</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">(when (face-background 'default)</span>
+<span style="color: #7c6f64;">;;     </span><span style="color: #7c6f64;">(highlight-indent-guides-mode)))</span>
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">(use-package highlight-indent-guides</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">:hook (prog-mode . thornemacs/enable-indent-guides-safe)</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">:custom</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">(highlight-indent-guides-method 'character)</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">(highlight-indent-guides-auto-enabled t)  </span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">(highlight-indent-guides-responsive 'top))</span>
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">(use-package highlight-indent-guides</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">:hook (prog-mode . highlight-indent-guides-mode)</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">:custom</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">(highlight-indent-guides-method 'fill) ;; or try 'column</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">(highlight-indent-guides-auto-enabled t)</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">(highlight-indent-guides-responsive 'top)</span>
+<span style="color: #7c6f64;">;;   </span><span style="color: #7c6f64;">(highlight-indent-guides-delay 0.1))</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org134fc93" class="outline-4">
+<h4 id="org134fc93"><span class="section-number-4">7.8.10.</span> Rainbow Mode</h4>
+<div class="outline-text-4" id="text-7-8-10">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> rainbow-mode
+  <span style="color: #fe8019;">:hook</span> (prog-mode . rainbow-mode))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc0d64e1" class="outline-4">
+<h4 id="orgc0d64e1"><span class="section-number-4">7.8.11.</span> Smartparens</h4>
+<div class="outline-text-4" id="text-7-8-11">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> smartparens
+  <span style="color: #fe8019;">:hook</span>
+  ((prog-mode . smartparens-mode)
+         (org-mode . smartparens-mode)
+         (emacs-lisp-mode . smartparens-mode))
+  <span style="color: #fe8019;">:config</span>
+  (<span style="color: #fb4933;">require</span> '<span style="color: #d3869b;">smartparens-config</span>))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orge512503" class="outline-3">
+<h3 id="orge512503"><span class="section-number-3">7.9.</span> Navigation</h3>
+<div class="outline-text-3" id="text-7-9">
+</div>
+<div id="outline-container-orgf8ea43c" class="outline-4">
+<h4 id="orgf8ea43c"><span class="section-number-4">7.9.1.</span> Which-key</h4>
+<div class="outline-text-4" id="text-7-9-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> which-key
+  <span style="color: #fe8019;">:hook</span> (after-init . which-key-mode)
+  <span style="color: #fe8019;">:custom</span>
+  (which-key-idle-delay 0.3))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org56924c3" class="outline-4">
+<h4 id="org56924c3"><span class="section-number-4">7.9.2.</span> Avy</h4>
+<div class="outline-text-4" id="text-7-9-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> avy
+  <span style="color: #fe8019;">:bind</span> ((<span style="color: #b8bb26;">"M-s"</span> . avy-goto-char-timer)
+         (<span style="color: #b8bb26;">"M-g c"</span> . avy-goto-char)
+         (<span style="color: #b8bb26;">"M-g w"</span> . avy-goto-word-1)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org39e80c8" class="outline-4">
+<h4 id="org39e80c8"><span class="section-number-4">7.9.3.</span> Consult</h4>
+<div class="outline-text-4" id="text-7-9-3">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> consult
+  <span style="color: #fe8019;">:bind</span> ((<span style="color: #b8bb26;">"C-s"</span> . consult-line)
+         (<span style="color: #b8bb26;">"C-x b"</span> . consult-buffer)
+         (<span style="color: #b8bb26;">"M-g g"</span> . consult-goto-line)
+         (<span style="color: #b8bb26;">"M-g M-g"</span> . consult-goto-line)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgeeacf01" class="outline-4">
+<h4 id="orgeeacf01"><span class="section-number-4">7.9.4.</span> Embark</h4>
+<div class="outline-text-4" id="text-7-9-4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> embark
+  <span style="color: #fe8019;">:bind</span> ((<span style="color: #b8bb26;">"C-."</span> . embark-act)
+         (<span style="color: #b8bb26;">"C-;"</span> . embark-dwim)
+         (<span style="color: #b8bb26;">"C-h B"</span> . embark-bindings))
+  <span style="color: #fe8019;">:init</span>
+  (<span style="color: #fb4933;">setq</span> embark-action-indicator
+        (<span style="color: #fb4933;">lambda</span> (<span style="color: #d3869b;">&amp;optional</span> _)
+          (which-key--show-keymap <span style="color: #b8bb26;">"Embark Actions"</span> embark--keymap nil nil t)))
+  (<span style="color: #fb4933;">setq</span> embark-become-indicator embark-action-indicator))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgeab76f7" class="outline-4">
+<h4 id="orgeab76f7"><span class="section-number-4">7.9.5.</span> Orderless</h4>
+<div class="outline-text-4" id="text-7-9-5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> orderless
+  <span style="color: #fe8019;">:init</span>
+  (<span style="color: #fb4933;">setq</span> completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org0a5d1d6" class="outline-4">
+<h4 id="org0a5d1d6"><span class="section-number-4">7.9.6.</span> Vertico</h4>
+<div class="outline-text-4" id="text-7-9-6">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> vertico
+  <span style="color: #fe8019;">:init</span>
+  (vertico-mode)
+  <span style="color: #fe8019;">:custom</span>
+  (vertico-cycle t))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9a22c2c" class="outline-4">
+<h4 id="org9a22c2c"><span class="section-number-4">7.9.7.</span> Marginalia</h4>
+<div class="outline-text-4" id="text-7-9-7">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> marginalia
+  <span style="color: #fe8019;">:hook</span> (after-init . marginalia-mode))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org683480b" class="outline-4">
+<h4 id="org683480b"><span class="section-number-4">7.9.8.</span> Projectile</h4>
+<div class="outline-text-4" id="text-7-9-8">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> projectile
+  <span style="color: #fe8019;">:diminish</span> projectile-mode
+  <span style="color: #fe8019;">:custom</span>
+  (projectile-project-search-path '(<span style="color: #b8bb26;">"~/projects/"</span>))
+  (projectile-completion-system 'default)
+  (projectile-switch-project-action #'projectile-dired)
+  (projectile-enable-caching t)
+  (projectile-generic-command <span style="color: #b8bb26;">"rg --files --hidden --follow -g '</span><span style="color: #d3869b;">!.git/</span><span style="color: #b8bb26;">'"</span>)
+  <span style="color: #fe8019;">:hook</span> (after-init . projectile-mode))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6fb8e14" class="outline-4">
+<h4 id="org6fb8e14"><span class="section-number-4">7.9.9.</span> Dirvish</h4>
+<div class="outline-text-4" id="text-7-9-9">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> dirvish
+  <span style="color: #fe8019;">:after</span> evil
+  <span style="color: #fe8019;">:hook</span> (after-init . dirvish-override-dired-mode)
+  <span style="color: #fe8019;">:custom</span>
+  (dirvish-default-layout '(0 0.25 0.75))
+  (dirvish-mode-line-format
+        '(<span style="color: #fe8019;">:left</span> (sort symlink) <span style="color: #fe8019;">:right</span> (omit yank index)))
+  (dirvish-header-line-height 24)
+
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Explicitly bind Evil keys to Dirvish (NOT using evil-collection)</span>
+  (<span style="color: #fb4933;">with-eval-after-load</span> 'dirvish
+    (<span style="color: #fb4933;">evil-define-key</span> 'normal dirvish-mode-map
+      <span style="color: #b8bb26;">"h"</span> #'dired-up-directory
+      <span style="color: #b8bb26;">"l"</span> #'dired-find-file
+      <span style="color: #b8bb26;">"q"</span> #'quit-window
+      <span style="color: #b8bb26;">"gg"</span> #'revert-buffer
+      <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">You can add more custom bindings here</span>
+      ))
+
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Optional: if you want Enter (RET) to open files too</span>
+  (<span style="color: #fb4933;">with-eval-after-load</span> 'dirvish
+    (<span style="color: #fb4933;">evil-define-key</span> 'normal dirvish-mode-map
+      (kbd <span style="color: #b8bb26;">"RET"</span>) #'dired-find-file))
+)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org0087d69" class="outline-3">
+<h3 id="org0087d69"><span class="section-number-3">7.10.</span> Direnv</h3>
+<div class="outline-text-3" id="text-7-10">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> envrc
+  <span style="color: #fe8019;">:demand</span> t  <span style="color: #7c6f64;">; </span><span style="color: #7c6f64;">Load immediately instead of deferring</span>
+  <span style="color: #fe8019;">:config</span>
+  (envrc-global-mode)
+
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Activate envrc before starting LSP to ensure correct environment</span>
+  (<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/ensure-envrc-before-lsp</span> ()
+    <span style="color: #b8bb26;">"Make sure envrc is activated before LSP starts."</span>
+    (<span style="color: #fb4933;">when</span> (<span style="color: #fb4933;">and</span> (buffer-file-name)
+              (not envrc--status))
+      (envrc-mode 1)
+      (envrc-reload)))
+
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Add this hook to prog-mode which will run before our LSP hooks</span>
+  (add-hook 'prog-mode-hook #'thornemacs/ensure-envrc-before-lsp '5))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org76d53b6" class="outline-3">
+<h3 id="org76d53b6"><span class="section-number-3">7.11.</span> LSP</h3>
+<div class="outline-text-3" id="text-7-11">
+</div>
+<div id="outline-container-org8b13681" class="outline-4">
+<h4 id="org8b13681"><span class="section-number-4">7.11.1.</span> Auto-completion</h4>
+<div class="outline-text-4" id="text-7-11-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> company
+  <span style="color: #fe8019;">:init</span> (global-company-mode)
+  <span style="color: #fe8019;">:hook</span> ((prog-mode . company-mode)
+     (org-mode . company-mode)
+     (emacs-lisp-mode . company-mode))
+  <span style="color: #fe8019;">:config</span>
+  (<span style="color: #fb4933;">setq</span> company-idle-delay 0
+        company-minimum-prefix-length 1
+        company-selection-wrap-around t
+        company-tooltip-align-annotations t
+        company-frontends '(company-pseudo-tooltip-frontend))
+  (define-key company-active-map (kbd <span style="color: #b8bb26;">"&lt;tab&gt;"</span>) #'company-complete-selection)
+  (define-key company-active-map (kbd <span style="color: #b8bb26;">"C-n"</span>) #'company-select-next)
+  (define-key company-active-map (kbd <span style="color: #b8bb26;">"C-p"</span>) #'company-select-previous)
+  (define-key company-active-map (kbd <span style="color: #b8bb26;">"RET"</span>) nil))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9876d67" class="outline-4">
+<h4 id="org9876d67"><span class="section-number-4">7.11.2.</span> Togglable LSP System</h4>
+<div class="outline-text-4" id="text-7-11-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Define the LSP choice customization</span>
+(<span style="color: #fb4933;">defcustom</span> <span style="color: #83a598;">thornemacs/lsp-backend</span> 'eglot
+  <span style="color: #b8bb26;">"The LSP backend to use. Either 'eglot or 'lsp-mode."</span>
+  <span style="color: #fe8019;">:type</span> '(choice (const <span style="color: #fe8019;">:tag</span> <span style="color: #b8bb26;">"Eglot"</span> eglot)
+                (const <span style="color: #fe8019;">:tag</span> <span style="color: #b8bb26;">"LSP Mode"</span> lsp-mode))
+  <span style="color: #fe8019;">:group</span> 'thornemacs)
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Interactive function to toggle LSP backend</span>
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/toggle-lsp-backend</span> ()
+  <span style="color: #b8bb26;">"Toggle between `eglot` and `lsp-mode` and restart the LSP session accordingly."</span>
+  (<span style="color: #fb4933;">interactive</span>)
+  (<span style="color: #fb4933;">let</span> ((new-backend (<span style="color: #fb4933;">if</span> (eq thornemacs/lsp-backend 'eglot)
+                         'lsp-mode
+                       'eglot)))
+    (<span style="color: #fb4933;">setq-default</span> thornemacs/lsp-backend new-backend)
+    (<span style="color: #fb4933;">setq</span> thornemacs/lsp-backend new-backend)
+    (message <span style="color: #b8bb26;">"LSP backend set to %s"</span> new-backend)
+
+    <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Clean up old LSP sessions if running</span>
+    (<span style="color: #fb4933;">cond</span>
+     ((<span style="color: #fb4933;">and</span> (fboundp 'eglot-shutdown-all)
+           (<span style="color: #fb4933;">bound-and-true-p</span> eglot--managed-mode))
+      (eglot-shutdown-all)
+      (message <span style="color: #b8bb26;">"Stopped Eglot"</span>))
+
+     ((<span style="color: #fb4933;">and</span> (fboundp 'lsp-disconnect)
+           (<span style="color: #fb4933;">bound-and-true-p</span> lsp-mode))
+      (lsp-disconnect)
+      (message <span style="color: #b8bb26;">"Stopped LSP Mode"</span>)))
+
+    <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Restart the new one after a short delay</span>
+    (run-with-timer
+     1 nil
+     (<span style="color: #fb4933;">lambda</span> ()
+       (<span style="color: #fb4933;">pcase</span> new-backend
+         ('eglot
+          (message <span style="color: #b8bb26;">"Restarting with Eglot..."</span>)
+          (eglot-ensure))
+         ('lsp-mode
+          (message <span style="color: #b8bb26;">"Restarting with LSP Mode..."</span>)
+          (lsp-deferred)))))))
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Keybinding for toggling</span>
+(global-set-key (kbd <span style="color: #b8bb26;">"C-c t l"</span>) 'thornemacs/toggle-lsp-backend)
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Safer format on save function</span>
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/lsp-format-buffer-on-save</span> ()
+  <span style="color: #b8bb26;">"Add appropriate format-on-save hook based on selected backend with safety checks."</span>
+  (<span style="color: #fb4933;">if</span> (eq thornemacs/lsp-backend 'eglot)
+      (add-hook 'before-save-hook
+                (<span style="color: #fb4933;">lambda</span> ()
+                  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">For org-mode, don't use LSP formatting</span>
+                  (<span style="color: #fb4933;">if</span> (eq major-mode 'org-mode)
+                      (message <span style="color: #b8bb26;">"Skipping LSP format in org-mode"</span>)
+                    <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Otherwise, check if LSP is actually connected before formatting</span>
+                    (<span style="color: #fb4933;">when</span> (<span style="color: #fb4933;">and</span> (fboundp 'eglot-managed-p)
+                               (eglot-managed-p)
+                               (eglot-current-server))
+                      (eglot-format-buffer))))
+                -10 t)
+    <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">LSP-mode version</span>
+    (add-hook 'before-save-hook
+              (<span style="color: #fb4933;">lambda</span> ()
+                <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">For org-mode, don't use LSP formatting</span>
+                (<span style="color: #fb4933;">if</span> (eq major-mode 'org-mode)
+                    (message <span style="color: #b8bb26;">"Skipping LSP format in org-mode"</span>)
+                  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Otherwise, check if LSP is actually connected</span>
+                  (<span style="color: #fb4933;">when</span> (<span style="color: #fb4933;">and</span> (<span style="color: #fb4933;">bound-and-true-p</span> lsp-mode)
+                             (lsp-workspaces))
+                    (lsp-format-buffer))))
+              -10 t)))
+
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/start-lsp</span> ()
+  <span style="color: #b8bb26;">"Start the selected LSP backend with special handling for org-mode."</span>
+  (<span style="color: #fb4933;">if</span> (eq major-mode 'org-mode)
+      (thornemacs/lsp-format-buffer-on-save)
+    (<span style="color: #fb4933;">condition-case</span> err
+        (<span style="color: #fb4933;">progn</span>
+          (<span style="color: #fb4933;">cond</span>
+           ((eq thornemacs/lsp-backend 'eglot)
+            (<span style="color: #fb4933;">require</span> '<span style="color: #d3869b;">eglot</span>)
+            (eglot-ensure))
+
+           ((eq thornemacs/lsp-backend 'lsp-mode)
+            (<span style="color: #fb4933;">require</span> '<span style="color: #d3869b;">lsp-mode</span>)
+            (lsp-deferred)))
+
+          (thornemacs/lsp-format-buffer-on-save))
+      (<span style="color: #fb4933; font-weight: bold;">error</span> (message <span style="color: #b8bb26;">"Could not start LSP: %s"</span> (error-message-string err))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org517e52a" class="outline-4">
+<h4 id="org517e52a"><span class="section-number-4">7.11.3.</span> LSP Packages Configuration</h4>
+<div class="outline-text-4" id="text-7-11-3">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> eglot
+  <span style="color: #fe8019;">:commands</span> (eglot eglot-ensure)
+  <span style="color: #fe8019;">:custom</span>
+  (eglot-autoshutdown t)
+  (eglot-sync-connect nil)
+  (eglot-extend-to-xref nil))
+
+(<span style="color: #fb4933;">use-package</span> lsp-mode
+  <span style="color: #fe8019;">:commands</span> (lsp lsp-deferred)
+  <span style="color: #fe8019;">:custom</span>
+  (lsp-completion-provider <span style="color: #fe8019;">:capf</span>)
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-enable-on-type-formatting nil)
+  (lsp-enable-snippet nil)
+  (lsp-log-io nil)
+  (lsp-modeline-diagnostics-enable t))
+
+(<span style="color: #fb4933;">use-package</span> eldoc-box
+  <span style="color: #fe8019;">:commands</span> (eldoc-box-hover-at-point-mode)
+  <span style="color: #fe8019;">:bind</span> (<span style="color: #b8bb26;">"C-c d"</span> . eldoc-box-help-at-point)
+  <span style="color: #fe8019;">:custom</span>
+  (eldoc-idle-delay 1.2)          
+  (eldoc-echo-area-use-multiline-p nil)
+  (eldoc-box-only-multi-line t)
+  (eldoc-box-clear-with-C-g t))        
+
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgaf1c5d6" class="outline-4">
+<h4 id="orgaf1c5d6"><span class="section-number-4">7.11.4.</span> Language-specific LSP Setup</h4>
+<div class="outline-text-4" id="text-7-11-4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Install language modes</span>
+(<span style="color: #fb4933;">use-package</span> rustic
+  <span style="color: #fe8019;">:mode</span> (<span style="color: #b8bb26;">"\\.rs\\'"</span> . rustic-mode)
+  <span style="color: #fe8019;">:custom</span>
+  (rustic-lsp-client (<span style="color: #fb4933;">if</span> (eq thornemacs/lsp-backend 'eglot)
+             'eglot
+               'lsp-mode)
+             rustic-format-on-save nil))
+(<span style="color: #fb4933;">use-package</span> go-mode
+  <span style="color: #fe8019;">:mode</span> (<span style="color: #b8bb26;">"\\.go\\'"</span> . go-mode)
+  <span style="color: #fe8019;">:custom</span>
+  (gofmt-command (<span style="color: #fb4933;">if</span> (executable-find <span style="color: #b8bb26;">"goimports"</span>) <span style="color: #b8bb26;">"goimports"</span> <span style="color: #b8bb26;">"gofmt"</span>))
+  (tab-width 4)
+  (indent-tabs-mode t))
+(<span style="color: #fb4933;">use-package</span> nix-mode
+  <span style="color: #fe8019;">:mode</span> <span style="color: #b8bb26;">"\\.nix\\'"</span>
+  <span style="color: #fe8019;">:custom</span>
+  (nix-indent-function 'nix-indent-line)
+  (nix-mode-use-smie t))
+(<span style="color: #fb4933;">use-package</span> ccls
+  <span style="color: #fe8019;">:commands</span> (ccls ccls-code-lens-mode)
+  <span style="color: #fe8019;">:init</span>
+  (<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">my-maybe-activate-ccls</span> ()
+    (<span style="color: #fb4933;">when</span> (<span style="color: #fb4933;">and</span> (derived-mode-p 'c-mode 'c++-mode)
+               buffer-file-name)
+      (<span style="color: #fb4933;">require</span> '<span style="color: #d3869b;">ccls</span>)
+      (<span style="color: #fb4933;">if</span> (eq thornemacs/lsp-backend 'eglot)
+          (eglot-ensure)
+        (lsp-deferred))))
+  <span style="color: #fe8019;">:hook</span> ((c-mode c++-mode) . my-maybe-activate-ccls))
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Set up LSP hooks with our dynamic system</span>
+(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/setup-lang-lsp-hooks</span> ()
+  <span style="color: #b8bb26;">"Add LSP hooks for all supported languages."</span>
+  (<span style="color: #fb4933;">dolist</span> (mode-hook '(rustic-mode-hook
+                      go-mode-hook
+                      nix-mode-hook
+                      ccls-hook
+                      c-mode-hook
+                      c++-mode-hook))
+
+    <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Add our dynamic LSP starter after loading direnv</span>
+    (add-hook mode-hook
+              (<span style="color: #fb4933;">lambda</span> ()
+                <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Make sure envrc has run first</span>
+                (thornemacs/ensure-envrc-before-lsp)
+                <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Add a small delay to ensure env is fully loaded</span>
+                (run-with-timer 0.5 nil #'thornemacs/start-lsp))
+              15)))
+
+<span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Run the hook setup</span>
+(thornemacs/setup-lang-lsp-hooks)
+
+(<span style="color: #fb4933;">with-eval-after-load</span> 'org
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Ensure org mode is properly loaded</span>
+  (<span style="color: #fb4933;">require</span> '<span style="color: #d3869b;">org</span>)
+  (<span style="color: #fb4933;">require</span> '<span style="color: #d3869b;">org-element</span>)
+
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Rest of your org configuration</span>
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((rust . t)
+     (nix . t)
+     (emacs-lisp .t))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org120b711" class="outline-4">
+<h4 id="org120b711"><span class="section-number-4">7.11.5.</span> Org-Integration</h4>
+<div class="outline-text-4" id="text-7-11-5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">thornemacs/start-lsp-manually-for-lang</span> (lang)
+  <span style="color: #b8bb26;">"Start LSP for a specific language in org-mode code blocks."</span>
+  (<span style="color: #fb4933;">interactive</span> <span style="color: #b8bb26;">"sEnter language (e.g., rust, go, nix): "</span>)
+  (<span style="color: #fb4933;">let</span> ((lang-mode (intern (concat lang <span style="color: #b8bb26;">"-mode"</span>))))
+    (<span style="color: #fb4933;">if</span> (functionp lang-mode)
+        (<span style="color: #fb4933;">progn</span>
+          (funcall lang-mode) <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Enable the language mode</span>
+          (thornemacs/start-lsp)) <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Start LSP</span>
+      (message <span style="color: #b8bb26;">"No mode found for language: %s"</span> lang))))
+
+(global-set-key (kbd <span style="color: #b8bb26;">"C-c t m"</span>) 'thornemacs/start-lsp-manually-for-lang)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgab09b2f" class="outline-4">
+<h4 id="orgab09b2f"><span class="section-number-4">7.11.6.</span> <span class="todo TODO">TODO</span> Modeline-Integration</h4>
+<div class="outline-text-4" id="text-7-11-6">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org9438ae3" class="outline-3">
+<h3 id="org9438ae3"><span class="section-number-3">7.12.</span> Vterm</h3>
+<div class="outline-text-3" id="text-7-12">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> vterm
+  <span style="color: #fe8019;">:custom</span>
+  (vterm-shell (executable-find <span style="color: #b8bb26;">"fish"</span>))
+  <span style="color: #fe8019;">:bind</span>
+  (<span style="color: #b8bb26;">"C-c M-t"</span> . vterm))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga5c38fb" class="outline-3">
+<h3 id="orga5c38fb"><span class="section-number-3">7.13.</span> Org</h3>
+<div class="outline-text-3" id="text-7-13">
+</div>
+<div id="outline-container-org291dd74" class="outline-4">
+<h4 id="org291dd74"><span class="section-number-4">7.13.1.</span> General Settings</h4>
+<div class="outline-text-4" id="text-7-13-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> org
+  <span style="color: #fe8019;">:mode</span> (<span style="color: #b8bb26;">"\\.org\\'"</span> . org-mode)
+  <span style="color: #fe8019;">:defer</span> t
+  <span style="color: #fe8019;">:init</span>
+  (<span style="color: #fb4933;">setq</span> org-directory <span style="color: #b8bb26;">"~/org"</span>
+        org-agenda-files (list (expand-file-name <span style="color: #b8bb26;">"agenda"</span> org-directory))
+        org-log-done 'time
+        org-deadline-warning-days 7
+        org-capture-templates
+        `((<span style="color: #b8bb26;">"t"</span> <span style="color: #b8bb26;">"Todo"</span> entry
+           (file+headline ,(expand-file-name <span style="color: #b8bb26;">"agenda/tasks.org"</span> org-directory) <span style="color: #b8bb26;">"Tasks"</span>)
+           <span style="color: #b8bb26;">"* TODO %?\n %U\n %a"</span>)))
+
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Global keybindings</span>
+  (global-set-key (kbd <span style="color: #b8bb26;">"C-c c"</span>) #'org-capture)
+  (global-set-key (kbd <span style="color: #b8bb26;">"C-c C-x"</span>) #'org-agenda)
+
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Agenda exporter options (for PDF/HTML output etc.)</span>
+  (<span style="color: #fb4933;">setq</span> org-agenda-exporter-settings
+        '((ps-number-columns 2)
+          (ps-landscape-mode t)
+          (htmlize-output-type 'css)))
+  <span style="color: #fe8019;">:custom</span>
+  (org-startup-indented t)
+  (org-hide-leading-stars t)
+  (org-edit-src-content-indentation 0)
+  (org-html-validation-link nil)
+  <span style="color: #fe8019;">:config</span>
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">UI hooks</span>
+  (add-hook 'org-mode-hook #'auto-fill-mode)
+  (add-hook 'org-mode-hook #'org-indent-mode)
+  (add-hook 'org-mode-hook #'visual-line-mode)
+
+  <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Evil integration in Agenda (since it's a derived special mode)</span>
+  (add-hook 'org-agenda-mode-hook #'evil-normalize-keymaps))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb452d74" class="outline-4">
+<h4 id="orgb452d74"><span class="section-number-4">7.13.2.</span> Fix things <code>(thornemacs/load_wallust_bg_from_json)</code> messes up.</h4>
+<div class="outline-text-4" id="text-7-13-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">defun</span> <span style="color: #fabd2f;">my/org-mode-rust-face-override</span> ()
+  (<span style="color: #fb4933;">when</span> (derived-mode-p 'org-mode)
+    (face-remap-add-relative 'rust-ampersand-face '(<span style="color: #fe8019;">:inherit</span> org-block))))
+
+(add-hook 'org-mode-hook #'my/org-mode-rust-face-override)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org391407a" class="outline-4">
+<h4 id="org391407a"><span class="section-number-4">7.13.3.</span> Org-modern</h4>
+<div class="outline-text-4" id="text-7-13-3">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> org-modern
+  <span style="color: #fe8019;">:after</span> org
+  <span style="color: #fe8019;">:hook</span> (org-mode . org-modern-mode))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge739b1f" class="outline-4">
+<h4 id="orge739b1f"><span class="section-number-4">7.13.4.</span> Org-babel</h4>
+<div class="outline-text-4" id="text-7-13-4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> org
+  <span style="color: #fe8019;">:defer</span> t
+  <span style="color: #fe8019;">:custom</span>
+  (org-confirm-babel-evaluate nil)
+  (<span style="color: #fb4933;">with-eval-after-load</span> 'org
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (org . t)
+       (rust . t)
+       (nix . t)))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf9102fb" class="outline-4">
+<h4 id="orgf9102fb"><span class="section-number-4">7.13.5.</span> Org-roam</h4>
+<div class="outline-text-4" id="text-7-13-5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> org-roam
+  <span style="color: #fe8019;">:defer</span> t
+  <span style="color: #fe8019;">:custom</span> (org-roam-directory (expand-file-name <span style="color: #b8bb26;">"~/org/roam"</span>))
+  <span style="color: #fe8019;">:config</span> (org-roam-db-autosync-mode))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org2b1fbfe" class="outline-4">
+<h4 id="org2b1fbfe"><span class="section-number-4">7.13.6.</span> Org-src-mode</h4>
+<div class="outline-text-4" id="text-7-13-6">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-hook 'org-src-mode-hook
+          (<span style="color: #fb4933;">lambda</span> ()
+            (company-mode 1)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org5a1c133" class="outline-3">
+<h3 id="org5a1c133"><span class="section-number-3">7.14.</span> Magit</h3>
+<div class="outline-text-3" id="text-7-14">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #fb4933;">use-package</span> magit
+  <span style="color: #fe8019;">:commands</span> (magit-status magit-log-current magit-blame)
+  <span style="color: #fe8019;">:bind</span> ((<span style="color: #b8bb26;">"C-x g"</span> . magit-status)         <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Shortcut to open Magit Status</span>
+         (<span style="color: #b8bb26;">"C-x C-g"</span> . magit-dispatch)    <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Magit dispatch for other actions</span>
+         (<span style="color: #b8bb26;">"C-x M-g"</span> . magit-blame))       <span style="color: #7c6f64;">;; </span><span style="color: #7c6f64;">Shortcut for Magit Blame</span>
+)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd9a374b" class="outline-2">
+<h2 id="orgd9a374b"><span class="section-number-2">8.</span> TO-DO</h2>
+<div class="outline-text-2" id="text-8">
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> Implement more colorschemes because I like way too many of them.</li>
+<li class="off"><code>[&#xa0;]</code> Add the option for overrides&#x2026;bc nix.</li>
+<li class="off"><code>[&#xa0;]</code> Add custom banners and footers.</li>
+<li class="off"><code>[&#xa0;]</code> Whatever else I come up with lmao.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5eb882a" class="outline-2">
+<h2 id="org5eb882a"><span class="section-number-2">9.</span> Credits</h2>
+<div class="outline-text-2" id="text-9">
+<ul class="org-ul">
+<li><a href="https://github.com/iynaix">@iynaix</a>:
+<ul class="org-ul">
+<li>Get with the program already folks! I <del>stole</del> took inspiration
+from <a href="https://github.com/iynaix/focal">iynaix/focal</a> for the flake as well as this README.</li>
+</ul></li>
+
+<li><a href="https://codeberg.org/acidbong">@acidbong</a>:
+<ul class="org-ul">
+<li>For helping my sorry ass over on the <a href="https://matrix.to/#/%23emacs:nixos.org">Nix Emacs</a> matrix space.</li>
+<li>And for providing this very helpful <a href="https://codeberg.org/acidbong/nixos/src/branch/master/pkgs/emacs">configuration</a> for me to <del>steal</del> take
+inspiration from.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2025-05-05 Mon 23:39</p>
+</div>
+</body>
+</html>

@@ -1,3 +1,4 @@
+#+SETUPFILE: ~/.config/emacs/assets/style.org
 #+PROPERTY: header-args:emacs-lisp :tangle config.el :comments no :mkdirp yes :prologue "(unless (bound-and-true-p lexical-binding) (princ \";;; -*- lexical-binding: t -*-\\n\"))"
 #+title: ThornEmacs
 
@@ -44,7 +45,7 @@ Overrides coming soon...
 ** Legacy *NIX based operating systems
 
 1. [[https://nix-community.github.io/home-manager/][Install home-manager]]
-2. Then go back to the section on [[#nixos][NixOS]] and follow those steps.
+2. Then go back to the section on [[*NixOS][NixOS]] and follow those steps.
 
 * Configuration
 
@@ -52,7 +53,7 @@ To configure this...configuration to your liking:
 1. If the configuration involves a package add it to the
    =extraEmacsPackages= section in [[file:default.nix][default.nix]].
 2. Set it up by editing this file (yes the README file) under the
-   [[#the-actual-config][actual config]] section.
+   [[*The Actual Config][configuration]] section.
 
 * Usage
 
