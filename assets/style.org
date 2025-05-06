@@ -20,7 +20,7 @@
 #+HTML_HEAD: body {
 #+HTML_HEAD: background-color: var(--bg);
 #+HTML_HEAD: color: var(--fg);
-#+HTML_HEAD: font-family: 'Geist Mono', 'Fira Code', 'JetBrains Mono', monospace;
+#+HTML_HEAD: font-family: 'Geist Mono NerdFont', 'JetBrains Mono Nerd Font', 'Geist Mono', 'JetBrains Mono', 'Fira Code', 'Mamelon', 'Noto Sans CJK JP', 'Segoe UI Emoji', 'monospace';
 #+HTML_HEAD: line-height: 1.6;
 #+HTML_HEAD: padding: 2em;
 #+HTML_HEAD: max-width: 80ch;
