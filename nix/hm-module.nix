@@ -31,8 +31,9 @@ in
       enable = mkEnableOption "thornemacs";
       service = {
         enable = mkEnableOption "enable emacs service";
-        client = mkOption "enable emacs client" {
+        client = mkOption {
           default = cfg.service.enable;
+          description = "enable emacs client";
         };
       };
       installAssets = {
