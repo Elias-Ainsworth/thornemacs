@@ -1,3 +1,4 @@
+# #+SETUPFILE: ~/projects/thornemacs/assets/style.org
 #+SETUPFILE: ~/.config/emacs/assets/style.org
 #+PROPERTY: header-args:emacs-lisp :tangle config.el :comments no :mkdirp yes :prologue "(unless (bound-and-true-p lexical-binding) (princ \";;; -*- lexical-binding: t -*-\\n\"))"
 #+title: ThornEmacs

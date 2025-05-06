@@ -21,9 +21,28 @@ in
     programs.thornemacs = {
       enable = mkEnableOption "thornemacs";
       service = {
-        enable = mkEnableOption "Emacs service";
+        enable = mkEnableOption "enable emacs service";
+        client = mkEnableOption "enable emacs client" {
+          default = cfg.service.enable;
+        };
       };
-      installAssets = mkEnableOption "install custom assets";
+      installAssets = {
+        enable = mkEnableOption "install custom assets" {
+          default = true;
+        };
+        ascii = mkEnableOption "install custom ascii art" {
+          default = cfg.installAssets.enable;
+        };
+        icons = mkEnableOption "install custom icons" {
+          default = cfg.installAssets.enable;
+        };
+        images = mkEnableOption "install custom images" {
+          default = cfg.installAssets.enable;
+        };
+        org = mkEnableOption "install custom org templates" {
+          default = cfg.installAssets.enable;
+        };
+      };
       package = mkPackageOption packages "thornemacs" {
         default = "default";
         pkgsText = "thornemacs.packages.\${pkgs.stdenv.hostPlatform.system}";
@@ -45,9 +64,21 @@ in
       es = "emacs --daemon"; # Start Emacs daemon
     };
 
-    xdg.configFile = mkIf cfg.installAssets {
-      "emacs/assets" = {
-        source = ../assets;
+    xdg.configFile = mkIf cfg.installAssets.enable {
+      "emacs/ascii" = mkIf cfg.installAssets.ascii {
+        source = ../assets/ascii;
+        recursive = true;
+      };
+      "emacs/icons" = mkIf cfg.installAssets.icons {
+        source = ../assets/icons;
+        recursive = true;
+      };
+      "emacs/images" = mkIf cfg.installAssets.images {
+        source = ../assets/images;
+        recursive = true;
+      };
+      "emacs/org" = mkIf cfg.installAssets.org {
+        source = ../assets/org;
         recursive = true;
       };
     };

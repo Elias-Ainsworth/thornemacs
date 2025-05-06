@@ -16,7 +16,6 @@
 #+HTML_HEAD: --purple: #d3869b;
 #+HTML_HEAD: --brown: #d65d0e;
 #+HTML_HEAD: }
-#+HTML_HEAD: /* === Base Reset === */
 #+HTML_HEAD: body {
 #+HTML_HEAD: background-color: var(--bg);
 #+HTML_HEAD: color: var(--fg);
@@ -37,9 +36,8 @@
 #+HTML_HEAD: color: var(--yellow);
 #+HTML_HEAD: margin-top: 1.5em;
 #+HTML_HEAD: }
-#+HTML_HEAD: /* === Code Blocks === */
 #+HTML_HEAD: code, pre {
-#+HTML_HEAD: background-color: transparent; /* prevent forced black background */
+#+HTML_HEAD: background-color: var(--bg1); 
 #+HTML_HEAD: color: var(--fg);
 #+HTML_HEAD: font-family: 'Fira Code', monospace;
 #+HTML_HEAD: font-variant-ligatures: none;
@@ -50,7 +48,6 @@
 #+HTML_HEAD: border-radius: 4px;
 #+HTML_HEAD: overflow-x: auto;
 #+HTML_HEAD: }
-#+HTML_HEAD: /* Org-mode specific code container */
 #+HTML_HEAD: .org-src-container {
 #+HTML_HEAD: background-color: transparent;
 #+HTML_HEAD: border-left: 1px solid var(--blue);
@@ -58,11 +55,9 @@
 #+HTML_HEAD: margin: 1em 0;
 #+HTML_HEAD: border-radius: 4px;
 #+HTML_HEAD: }
-#+HTML_HEAD: /* Override htmlize inline span background */
 #+HTML_HEAD: .org-src-container span, pre span {
 #+HTML_HEAD: background: transparent !important;
 #+HTML_HEAD: }
-#+HTML_HEAD: /* === Scrollbar Styling for Code Blocks === */
 #+HTML_HEAD: .org-src-container::-webkit-scrollbar,
 #+HTML_HEAD: pre::-webkit-scrollbar {
 #+HTML_HEAD: height: 8px;
@@ -83,13 +78,11 @@
 #+HTML_HEAD: pre::-webkit-scrollbar-thumb:hover {
 #+HTML_HEAD: background-color: var(--fg2);
 #+HTML_HEAD: }
-#+HTML_HEAD: /* Optional: Firefox support (limited but helps) */
 #+HTML_HEAD: .org-src-container,
 #+HTML_HEAD: pre {
 #+HTML_HEAD: scrollbar-width: thin;
 #+HTML_HEAD: scrollbar-color: var(--bg3) var(--bg1);
 #+HTML_HEAD: }
-#+HTML_HEAD: /* === Blockquote === */
 #+HTML_HEAD: blockquote {
 #+HTML_HEAD: border-left: 2px solid var(--orange);
 #+HTML_HEAD: padding-left: 1em;
@@ -98,7 +91,6 @@
 #+HTML_HEAD: background-color: var(--bg1);
 #+HTML_HEAD: margin: 1em 0;
 #+HTML_HEAD: }
-#+HTML_HEAD: /* === Tables === */
 #+HTML_HEAD: table {
 #+HTML_HEAD: border-collapse: collapse;
 #+HTML_HEAD: width: 100%;
@@ -147,7 +139,6 @@
 #+HTML_HEAD: font-size: 0.9em;
 #+HTML_HEAD: color: var(--fg2);
 #+HTML_HEAD: }
-#+HTML_HEAD: /* === Horizontal Rule === */
 #+HTML_HEAD: hr {
 #+HTML_HEAD: border: none;
 #+HTML_HEAD: border-top: 1px solid var(--bg3);
