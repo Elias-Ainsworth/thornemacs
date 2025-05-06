@@ -457,7 +457,7 @@ Just use =nix develop=
   (dashboard-setup-startup-hook)
 
   ;; Banner and layout
-  (setq dashboard-startup-banner (cons "~/.config/assets/images/chise.png" "~/.config/emacs/ascii/eepy.txt")) ; You can use a custom path too
+  (setq dashboard-startup-banner (cons "~/.config/emacs/images/chise.png" "~/.config/emacs/ascii/eepy.txt")) ; You can use a custom path too
   (setq dashboard-banner-logo-title "")
   (setq dashboard-center-content t)
   (setq dashboard-show-shortcuts nil)
