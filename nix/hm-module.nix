@@ -20,9 +20,12 @@ in
   options = {
     programs.thornemacs = {
       enable = mkEnableOption "thornemacs";
-      service = mkEnableOption "emacs service";
+      service = {
+        enable = mkEnableOption "Emacs service";
+      };
+      installAssets = mkEnableOption "install custom assets";
       package = mkPackageOption packages "thornemacs" {
-        default = "default";
+        default = packages.default;
         pkgsText = "thornemacs.packages.\${pkgs.stdenv.hostPlatform.system}";
       };
 
