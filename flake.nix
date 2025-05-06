@@ -11,6 +11,7 @@
 
   outputs =
     inputs@{
+      self,
       flake-parts,
       nixpkgs,
       emacs-overlay,
@@ -30,7 +31,7 @@
         in
         {
           packages = rec {
-            thornemacs = emacsPkgs.callPackage ./default.nix { };
+            thornemacs = emacsPkgs.callPackage ./nix/package.nix { };
             default = thornemacs;
           };
 
@@ -50,5 +51,11 @@
             ];
           };
         };
+      flake = {
+        homeManagerModules = rec {
+          default = import ./nix/hm-module.nix self;
+          thornemacs = default;
+        };
+      };
     };
 }

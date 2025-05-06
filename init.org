@@ -941,7 +941,7 @@ Just use =nix develop=
   (org-startup-indented t)
   (org-hide-leading-stars t)
   (org-edit-src-content-indentation 0)
-
+  (org-html-validation-link nil)
   :config
   ;; UI hooks
   (add-hook 'org-mode-hook #'auto-fill-mode)

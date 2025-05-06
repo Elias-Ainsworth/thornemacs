@@ -1,0 +1,156 @@
+#+HTML_HEAD: <style type="text/css">
+#+HTML_HEAD: :root {
+#+HTML_HEAD: --bg: #1d2021;
+#+HTML_HEAD: --bg1: #3c3836;
+#+HTML_HEAD: --bg2: #504945;
+#+HTML_HEAD: --bg3: #665c54;
+#+HTML_HEAD: --fg: #ebdbb2;
+#+HTML_HEAD: --fg1: #d5c4a1;
+#+HTML_HEAD: --fg2: #bdae93;
+#+HTML_HEAD: --red: #fb4934;
+#+HTML_HEAD: --orange: #fe8019;
+#+HTML_HEAD: --yellow: #fabd2f;
+#+HTML_HEAD: --green: #b8bb26;
+#+HTML_HEAD: --aqua: #8ec07c;
+#+HTML_HEAD: --blue: #83a598;
+#+HTML_HEAD: --purple: #d3869b;
+#+HTML_HEAD: --brown: #d65d0e;
+#+HTML_HEAD: }
+#+HTML_HEAD: /* === Base Reset === */
+#+HTML_HEAD: body {
+#+HTML_HEAD: background-color: var(--bg);
+#+HTML_HEAD: color: var(--fg);
+#+HTML_HEAD: font-family: 'Geist Mono', 'Fira Code', 'JetBrains Mono', monospace;
+#+HTML_HEAD: line-height: 1.6;
+#+HTML_HEAD: padding: 2em;
+#+HTML_HEAD: max-width: 80ch;
+#+HTML_HEAD: margin: auto;
+#+HTML_HEAD: }
+#+HTML_HEAD: a {
+#+HTML_HEAD: color: var(--blue);
+#+HTML_HEAD: text-decoration: none;
+#+HTML_HEAD: }
+#+HTML_HEAD: a:hover {
+#+HTML_HEAD: text-decoration: underline;
+#+HTML_HEAD: }
+#+HTML_HEAD: h1, h2, h3, h4, h5, h6 {
+#+HTML_HEAD: color: var(--yellow);
+#+HTML_HEAD: margin-top: 1.5em;
+#+HTML_HEAD: }
+#+HTML_HEAD: /* === Code Blocks === */
+#+HTML_HEAD: code, pre {
+#+HTML_HEAD: background-color: transparent; /* prevent forced black background */
+#+HTML_HEAD: color: var(--fg);
+#+HTML_HEAD: font-family: 'Fira Code', monospace;
+#+HTML_HEAD: font-variant-ligatures: none;
+#+HTML_HEAD: }
+#+HTML_HEAD: pre {
+#+HTML_HEAD: background-color: var(--bg1);
+#+HTML_HEAD: padding: 1em;
+#+HTML_HEAD: border-radius: 4px;
+#+HTML_HEAD: overflow-x: auto;
+#+HTML_HEAD: }
+#+HTML_HEAD: /* Org-mode specific code container */
+#+HTML_HEAD: .org-src-container {
+#+HTML_HEAD: background-color: transparent;
+#+HTML_HEAD: border-left: 1px solid var(--blue);
+#+HTML_HEAD: padding: 1em;
+#+HTML_HEAD: margin: 1em 0;
+#+HTML_HEAD: border-radius: 4px;
+#+HTML_HEAD: }
+#+HTML_HEAD: /* Override htmlize inline span background */
+#+HTML_HEAD: .org-src-container span, pre span {
+#+HTML_HEAD: background: transparent !important;
+#+HTML_HEAD: }
+#+HTML_HEAD: /* === Scrollbar Styling for Code Blocks === */
+#+HTML_HEAD: .org-src-container::-webkit-scrollbar,
+#+HTML_HEAD: pre::-webkit-scrollbar {
+#+HTML_HEAD: height: 8px;
+#+HTML_HEAD: width: 8px;
+#+HTML_HEAD: }
+#+HTML_HEAD: .org-src-container::-webkit-scrollbar-track,
+#+HTML_HEAD: pre::-webkit-scrollbar-track {
+#+HTML_HEAD: background: var(--bg1);
+#+HTML_HEAD: border-radius: 4px;
+#+HTML_HEAD: }
+#+HTML_HEAD: .org-src-container::-webkit-scrollbar-thumb,
+#+HTML_HEAD: pre::-webkit-scrollbar-thumb {
+#+HTML_HEAD: background-color: var(--bg3);
+#+HTML_HEAD: border-radius: 4px;
+#+HTML_HEAD: border: 2px solid var(--bg1);
+#+HTML_HEAD: }
+#+HTML_HEAD: .org-src-container::-webkit-scrollbar-thumb:hover,
+#+HTML_HEAD: pre::-webkit-scrollbar-thumb:hover {
+#+HTML_HEAD: background-color: var(--fg2);
+#+HTML_HEAD: }
+#+HTML_HEAD: /* Optional: Firefox support (limited but helps) */
+#+HTML_HEAD: .org-src-container,
+#+HTML_HEAD: pre {
+#+HTML_HEAD: scrollbar-width: thin;
+#+HTML_HEAD: scrollbar-color: var(--bg3) var(--bg1);
+#+HTML_HEAD: }
+#+HTML_HEAD: /* === Blockquote === */
+#+HTML_HEAD: blockquote {
+#+HTML_HEAD: border-left: 2px solid var(--orange);
+#+HTML_HEAD: padding-left: 1em;
+#+HTML_HEAD: color: var(--fg1);
+#+HTML_HEAD: font-style: italic;
+#+HTML_HEAD: background-color: var(--bg1);
+#+HTML_HEAD: margin: 1em 0;
+#+HTML_HEAD: }
+#+HTML_HEAD: /* === Tables === */
+#+HTML_HEAD: table {
+#+HTML_HEAD: border-collapse: collapse;
+#+HTML_HEAD: width: 100%;
+#+HTML_HEAD: margin: 1em 0;
+#+HTML_HEAD: font-size: 0.95em;
+#+HTML_HEAD: }
+#+HTML_HEAD: th, td {
+#+HTML_HEAD: border: 1px solid var(--bg3);
+#+HTML_HEAD: padding: 0.5em;
+#+HTML_HEAD: text-align: left;
+#+HTML_HEAD: }
+#+HTML_HEAD: th {
+#+HTML_HEAD: background-color: var(--bg2);
+#+HTML_HEAD: color: var(--yellow);
+#+HTML_HEAD: }
+#+HTML_HEAD: td {
+#+HTML_HEAD: background-color: var(--bg1);
+#+HTML_HEAD: }
+#+HTML_HEAD: /* === Org-mode Extras === */
+#+HTML_HEAD: .title {
+#+HTML_HEAD: color: var(--orange);
+#+HTML_HEAD: font-size: 2em;
+#+HTML_HEAD: font-weight: bold;
+#+HTML_HEAD: }
+#+HTML_HEAD: .subtitle {
+#+HTML_HEAD: color: var(--fg1);
+#+HTML_HEAD: font-size: 0.5em;
+#+HTML_HEAD: }
+#+HTML_HEAD: .todo {
+#+HTML_HEAD: color: var(--red);
+#+HTML_HEAD: font-weight: bold;
+#+HTML_HEAD: }
+#+HTML_HEAD: .done {
+#+HTML_HEAD: color: var(--green);
+#+HTML_HEAD: font-weight: bold;
+#+HTML_HEAD: }
+#+HTML_HEAD: .tag {
+#+HTML_HEAD: background-color: var(--bg2);
+#+HTML_HEAD: color: var(--purple);
+#+HTML_HEAD: padding: 0 0.5em;
+#+HTML_HEAD: margin-left: 1em;
+#+HTML_HEAD: border-radius: 3px;
+#+HTML_HEAD: font-size: 0.9em;
+#+HTML_HEAD: }
+#+HTML_HEAD: .footpara, .footdef {
+#+HTML_HEAD: font-size: 0.9em;
+#+HTML_HEAD: color: var(--fg2);
+#+HTML_HEAD: }
+#+HTML_HEAD: /* === Horizontal Rule === */
+#+HTML_HEAD: hr {
+#+HTML_HEAD: border: none;
+#+HTML_HEAD: border-top: 1px solid var(--bg3);
+#+HTML_HEAD: margin: 2em 0;
+#+HTML_HEAD: }
+#+HTML_HEAD: </style>
