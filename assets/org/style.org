@@ -34,11 +34,11 @@
 #+HTML_HEAD: text-decoration: underline;
 #+HTML_HEAD: }
 #+HTML_HEAD: h1, h2, h3, h4, h5, h6 {
-#+HTML_HEAD: color: var(--orange);
+#+HTML_HEAD: color: var(--yellow);
 #+HTML_HEAD: margin-top: 1.5em;
 #+HTML_HEAD: }
 #+HTML_HEAD: code, pre {
-#+HTML_HEAD: background-color: var(--bg1); 
+#+HTML_HEAD: background-color: var(--bg1);
 #+HTML_HEAD: color: var(--fg);
 #+HTML_HEAD: font-family: 'Fira Code', monospace;
 #+HTML_HEAD: font-variant-ligatures: none;
@@ -113,7 +113,7 @@
 #+HTML_HEAD: }
 #+HTML_HEAD: /* === Org-mode Extras === */
 #+HTML_HEAD: .title {
-#+HTML_HEAD: color: var(--brown);
+#+HTML_HEAD: color: var(--orange);
 #+HTML_HEAD: font-size: 2em;
 #+HTML_HEAD: font-weight: bold;
 #+HTML_HEAD: }
