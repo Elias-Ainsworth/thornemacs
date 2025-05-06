@@ -8,7 +8,7 @@ devolopment workflows...and basically function like my neovim config:
 
 * Features
 
-- A custom function to togglglot (default)` and `lsp-mode`.
+- A custom function to togglg between =eglot= (default) and =lsp-mode=.
 - A custom function to set the background to a the background color
   determinied by wallust.
 Among other things (I'll get to this once I actually finish this
@@ -18,7 +18,7 @@ damned config).
 
 ** NixOS
 
-Include the following input in your `flake.nix` file:
+Include the following input in your =flake.nix= file:
 
 #+begin_src nix :tangle no
 {
@@ -26,8 +26,8 @@ Include the following input in your `flake.nix` file:
 }
 #+end_src
 
-Then include it in your `environment.systemPackages` or
-`home.packages` by referencing the input:
+Then include it in your =environment.systemPackages= or
+=home.packages= by referencing the input:
 
 #+begin_src nix :tangle no
   inputs.thornemacs.packages.${pkgs.system}.default
@@ -50,7 +50,7 @@ Overrides coming soon...
 
 To configure this...configuration to your liking:
 1. If the configuration involves a package add it to the
-   `extraEmacsPackages` section in [[file:default.nix][default.nix]].
+   =extraEmacsPackages= section in [[file:default.nix][default.nix]].
 2. Set it up by editing this file (yes the README file) under the
    [[#the-actual-config][actual config]] section.
 
@@ -65,7 +65,7 @@ This is more for my reference than anything else. But if you would
 like to view my documentation, check out [[file:docs/][./docs]].
 
 * Hacking
-Just use `nix develop`
+Just use =nix develop=
 
 * The Actual Config
 
@@ -148,7 +148,7 @@ Just use `nix develop`
             (add-hook 'after-save-hook #'auto-tangle-config nil 'local)))
 #+end_src
 
-** Bootstrap `use-package`
+** Bootstrap =use-package=
 
 #+begin_src emacs-lisp
 (require 'use-package)
@@ -941,6 +941,7 @@ Just use `nix develop`
   (org-startup-indented t)
   (org-hide-leading-stars t)
   (org-edit-src-content-indentation 0)
+
   :config
   ;; UI hooks
   (add-hook 'org-mode-hook #'auto-fill-mode)
@@ -950,6 +951,15 @@ Just use `nix develop`
   ;; Evil integration in Agenda (since it's a derived special mode)
   (add-hook 'org-agenda-mode-hook #'evil-normalize-keymaps))
 #+end_src
+
+*** Fix things =(thornemacs/load_wallust_bg_from_json)= messes up.
+#+begin_src emacs-lisp
+(defun my/org-mode-rust-face-override ()
+  (when (derived-mode-p 'org-mode)
+    (face-remap-add-relative 'rust-ampersand-face '(:inherit org-block))))
+
+(add-hook 'org-mode-hook #'my/org-mode-rust-face-override)
+#+end_src  
 
 *** Org-modern
 
