@@ -25,7 +25,7 @@ in
       };
       installAssets = mkEnableOption "install custom assets";
       package = mkPackageOption packages "thornemacs" {
-        default = packages.default;
+        default = "default";
         pkgsText = "thornemacs.packages.\${pkgs.stdenv.hostPlatform.system}";
       };
 
