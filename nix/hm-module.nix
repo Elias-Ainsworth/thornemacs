@@ -7,9 +7,18 @@ self:
 }:
 let
   inherit (lib)
+    mkOption
     mkEnableOption
     mkPackageOption
     mkIf
+    ;
+  inherit (lib.types)
+    attrsOf
+    bool
+    listOf
+    nullOr
+    package
+    str
     ;
 
   packages = self.packages.${pkgs.stdenv.hostPlatform.system};
@@ -22,30 +31,41 @@ in
       enable = mkEnableOption "thornemacs";
       service = {
         enable = mkEnableOption "enable emacs service";
-        client = mkEnableOption "enable emacs client" {
+        client = mkOption "enable emacs client" {
           default = cfg.service.enable;
         };
       };
       installAssets = {
-        enable = mkEnableOption "install custom assets" {
+        enable = mkOption {
+          type = bool;
           default = true;
+          description = "install custom assets";
         };
-        ascii = mkEnableOption "install custom ascii art" {
+        ascii = mkOption {
+          type = bool;
           default = cfg.installAssets.enable;
+          description = "install custom ascii art";
         };
-        icons = mkEnableOption "install custom icons" {
+        icons = mkOption {
+          type = bool;
           default = cfg.installAssets.enable;
+          description = "install custom icons";
         };
-        images = mkEnableOption "install custom images" {
+        images = mkOption {
+          type = bool;
           default = cfg.installAssets.enable;
+          description = "install custom images";
         };
-        org = mkEnableOption "install custom org templates" {
+        org = mkOption {
+          type = bool;
           default = cfg.installAssets.enable;
+          description = "install custom org templates";
         };
       };
-      package = mkPackageOption packages "thornemacs" {
-        default = "default";
-        pkgsText = "thornemacs.packages.\${pkgs.stdenv.hostPlatform.system}";
+      package = mkOption {
+        type = package;
+        default = packages.default;
+        # pkgsText = "thornemacs.packages.\${pkgs.stdenv.hostPlatform.system}";
       };
 
     };
@@ -88,7 +108,7 @@ in
       enable = true;
       package = cfg.package;
       client = {
-        enable = true; # Enable the Emacs client (e.g., emacsclient)
+        enable = cfg.service.client; # Enable the Emacs client (e.g., emacsclient)
       };
     };
   };
