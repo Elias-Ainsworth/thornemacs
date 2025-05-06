@@ -30,10 +30,11 @@
 #+HTML_HEAD: text-decoration: none;
 #+HTML_HEAD: }
 #+HTML_HEAD: a:hover {
+#+HTML_HEAD: color: var(--purple);
 #+HTML_HEAD: text-decoration: underline;
 #+HTML_HEAD: }
 #+HTML_HEAD: h1, h2, h3, h4, h5, h6 {
-#+HTML_HEAD: color: var(--yellow);
+#+HTML_HEAD: color: var(--orange);
 #+HTML_HEAD: margin-top: 1.5em;
 #+HTML_HEAD: }
 #+HTML_HEAD: code, pre {
@@ -46,6 +47,7 @@
 #+HTML_HEAD: background-color: var(--bg1);
 #+HTML_HEAD: padding: 1em;
 #+HTML_HEAD: border-radius: 4px;
+#+HTML_HEAD: border: 1px solid var(--blue);
 #+HTML_HEAD: overflow-x: auto;
 #+HTML_HEAD: }
 #+HTML_HEAD: .org-src-container {
@@ -111,12 +113,12 @@
 #+HTML_HEAD: }
 #+HTML_HEAD: /* === Org-mode Extras === */
 #+HTML_HEAD: .title {
-#+HTML_HEAD: color: var(--orange);
+#+HTML_HEAD: color: var(--brown);
 #+HTML_HEAD: font-size: 2em;
 #+HTML_HEAD: font-weight: bold;
 #+HTML_HEAD: }
 #+HTML_HEAD: .subtitle {
-#+HTML_HEAD: color: var(--fg1);
+#+HTML_HEAD: color: var(--fg2);
 #+HTML_HEAD: font-size: 0.5em;
 #+HTML_HEAD: }
 #+HTML_HEAD: .todo {
@@ -146,4 +148,4 @@
 #+HTML_HEAD: }
 #+HTML_HEAD: </style>
 
-#+OPTIONS: author:nil creator:nil timestamp:nil org-html-postamble:nil
+#+OPTIONS: author:nil creator:nil timestamp:nil org-html-postamble:nil num:0 toc:2
