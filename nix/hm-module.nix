@@ -9,16 +9,11 @@ let
   inherit (lib)
     mkOption
     mkEnableOption
-    mkPackageOption
     mkIf
     ;
   inherit (lib.types)
-    attrsOf
     bool
-    listOf
-    nullOr
     package
-    str
     ;
 
   packages = self.packages.${pkgs.stdenv.hostPlatform.system};
@@ -65,8 +60,7 @@ in
       };
       package = mkOption {
         type = package;
-        default = packages.default;
-        # pkgsText = "thornemacs.packages.\${pkgs.stdenv.hostPlatform.system}";
+        inherit (packages) default;
       };
 
     };
@@ -107,7 +101,7 @@ in
     # Conditionally enable Emacs service
     services.emacs = mkIf cfg.service.enable {
       enable = true;
-      package = cfg.package;
+      inherit (cfg) package;
       client = {
         enable = cfg.service.client; # Enable the Emacs client (e.g., emacsclient)
       };

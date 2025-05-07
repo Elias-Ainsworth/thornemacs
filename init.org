@@ -9,17 +9,13 @@ devolopment workflows...and basically function like my neovim config:
 [[https://github.com/Elias-Ainsworth/thornevim][ThorneVim]].
 
 * Features
-
-- A custom function to togglg between =eglot= (default) and =lsp-mode=.
+- A custom function to toggle between =eglot= (default) and =lsp-mode=.
 - A custom function to set the background to a the background color
   determinied by wallust.
-Among other things (I'll get to this once I actually finish this
-damned config).
+- A home manager module to boot.
 
 * Installation
-
 ** NixOS
-
 Include the following input in your =flake.nix= file:
 
 #+begin_src nix :tangle no
@@ -41,15 +37,42 @@ Alternatively, it can also be run directly:
 nix run github:Elias-Ainsworth/thornemacs
 #+end_src
 
-Overrides coming soon...
+*** home-manager 
+This program can be configured via home-manager. Include the flake
+input, but you don't need to add it to =home.packages=-enabling the
+module handles that automatically.
+
+You can enable any of the following options as part of your
+home-manager configuration:
+
+#+begin_src nix :tangle no
+{
+  imports = [ inputs.thornemacs.homeManagerModules.default ]; # You need this...
+
+  programs.thornemacs = {
+    enable = true;
+    service = {
+      enable = true;
+      client = true; # enabled by default
+    };
+    installAssets = {
+      enable = true;
+      ascii = true; 
+      icons = true; 
+      images = true;
+      org = true;
+    };
+    package = inputs.thornemacs.packages.${pkgs.system}.default; # I don't know why you'd do this...
+  };
+}
+#+end_src
 
 ** Legacy *NIX based operating systems
-
 1. [[https://nix-community.github.io/home-manager/][Install home-manager]]
-2. Then go back to the section on [[*NixOS][NixOS]] and follow those steps.
+2. Then go back to the section on [[*NixOS][NixOS]] and follow those steps, and if
+   you're also using home-manager I suggest using those options as well.
 
 * Configuration
-
 To configure this...configuration to your liking:
 1. If the configuration involves a package add it to the
    =extraEmacsPackages= section in [[file:default.nix][default.nix]].
@@ -57,12 +80,10 @@ To configure this...configuration to your liking:
    [[*The Actual Config][configuration]] section.
 
 * Usage
-
 You're kidding me right? It's emacs (with evil-mode)...use it like
 emacs (with evil-mode).
 
 * Documentation
-
 This is more for my reference than anything else. But if you would
 like to view my documentation, check out [[file:docs/][./docs]].
 
@@ -70,17 +91,13 @@ like to view my documentation, check out [[file:docs/][./docs]].
 Just use =nix develop=
 
 * The Actual Config
-
 ** Lexical Binding
-
 #+begin_src emacs-lisp
 ;;; -*- lexical-binding: t -*-
 #+end_src
 
 ** Performance Tweaks
-
 *** Garbage Collection 
-
 #+begin_src emacs-lisp
 ;; Speed up startup by raising GC limits
 (setq gc-cons-threshold most-positive-fixnum
@@ -102,7 +119,6 @@ Just use =nix develop=
 #+end_src
 
 *** Native Compilation
-
 #+begin_src emacs-lisp
 (when (and (fboundp 'native-comp-available-p)
            (native-comp-available-p))
@@ -111,7 +127,6 @@ Just use =nix develop=
 #+end_src
 
 *** File Operations
-
 #+begin_src emacs-lisp
 ;; Delay file handlers until needed
 (setq file-name-handler-alist-original file-name-handler-alist
@@ -128,7 +143,6 @@ Just use =nix develop=
 #+end_src
 
 *** Package Loading Order
-
 #+begin_src emacs-lisp
 (setq package-enable-at-startup nil)
 (setq inhibit-startup-message t)
@@ -137,7 +151,6 @@ Just use =nix develop=
 #+end_src
 
 ** Auto-Tangle on Save
-
 #+begin_src emacs-lisp
 (defun auto-tangle-config ()
   (when (string-equal (buffer-file-name)
@@ -151,7 +164,6 @@ Just use =nix develop=
 #+end_src
 
 ** Bootstrap =use-package=
-
 #+begin_src emacs-lisp
 (require 'use-package)
 (setq use-package-always-ensure t
@@ -160,7 +172,6 @@ Just use =nix develop=
 #+end_src
 
 ** Benchmarking
-
 #+begin_src emacs-lisp
 (use-package benchmark-init
   :config
@@ -168,7 +179,6 @@ Just use =nix develop=
 #+end_src
 
 ** Recentf
-
 #+begin_src emacs-lisp
 (use-package recentf
   :init
@@ -179,7 +189,6 @@ Just use =nix develop=
 #+end_src
 
 ** Evil Mode
-
 #+begin_src emacs-lisp
 ;; Prevent conflicts with evil-collection
 ;; (setq evil-want-keybinding nil)
@@ -230,9 +239,7 @@ Just use =nix develop=
 #+end_src
 
 ** UI
-
 *** Disable Default GUI Elements
-
 #+begin_src emacs-lisp
   ;; Disable UI chrome early
   (menu-bar-mode -1)
@@ -248,7 +255,6 @@ Just use =nix develop=
 #+end_src
 
 *** Font sizing
-
 #+begin_src emacs-lisp
 (let ((current-font (face-attribute 'default :family)))
   (set-face-attribute 'default nil
@@ -257,7 +263,6 @@ Just use =nix develop=
 #+end_src
 
 *** Theme 
-
 #+begin_src emacs-lisp
 ;; (use-package catppuccin-theme
 ;;   :config (setq catppuccin-flavor 'mocha)
@@ -275,7 +280,6 @@ Just use =nix develop=
 #+end_src
 
 *** Wallpaper
-
 #+begin_src emacs-lisp
 (defun wallpaper (arg)
   "Run the wallpaper command with an optional argument."
@@ -289,7 +293,6 @@ Just use =nix develop=
 #+end_src
 
 *** Wallust Integration
-
 #+begin_src emacs-lisp
 (require 'json)
 (require 'filenotify)
@@ -382,7 +385,6 @@ Just use =nix develop=
 #+end_src
 
 *** Transparency
-
 #+begin_src emacs-lisp
 (set-frame-parameter nil 'alpha-background 80)
 (set-face-background 'default nil (selected-frame))
@@ -446,7 +448,6 @@ Just use =nix develop=
 #+end_src
 
 *** Dashboard
-
 #+begin_src emacs-lisp
 (use-package dashboard
   :demand t
@@ -475,7 +476,6 @@ Just use =nix develop=
 #+end_src
 
 *** Modeline
-
 #+begin_src emacs-lisp
 (use-package nerd-icons
   :defer t)
@@ -493,7 +493,6 @@ Just use =nix develop=
 #+end_src
 
 *** TODO Indent Guides
-
 #+begin_src emacs-lisp
 ;; (defun thornemacs/enable-indent-guides-safe ()
 ;;   (when (face-background 'default)
@@ -516,14 +515,12 @@ Just use =nix develop=
 #+end_src
 
 *** Rainbow Mode
-
 #+begin_src emacs-lisp
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode))
 #+end_src
 
 *** Smartparens
-
 #+begin_src emacs-lisp
 (use-package smartparens
   :hook
@@ -535,9 +532,7 @@ Just use =nix develop=
 #+end_src
 
 ** Navigation
-
 *** Which-key
-
 #+begin_src emacs-lisp
 (use-package which-key
   :hook (after-init . which-key-mode)
@@ -546,7 +541,6 @@ Just use =nix develop=
 #+end_src
 
 *** Avy
-
 #+begin_src emacs-lisp
     (use-package avy
       :bind (("M-s" . avy-goto-char-timer)
@@ -555,7 +549,6 @@ Just use =nix develop=
 #+end_src
 
 *** Consult
-
 #+begin_src emacs-lisp
     (use-package consult
       :bind (("C-s" . consult-line)
@@ -563,7 +556,6 @@ Just use =nix develop=
              ("M-g g" . consult-goto-line)
              ("M-g M-g" . consult-goto-line)))
 #+end_src
-
 
 *** Embark
 #+begin_src emacs-lisp
@@ -597,14 +589,12 @@ Just use =nix develop=
 #+end_src
 
 *** Marginalia
-
 #+begin_src emacs-lisp
     (use-package marginalia
       :hook (after-init . marginalia-mode))
 #+end_src
 
 *** Projectile
-
 #+begin_src emacs-lisp
 (use-package projectile
   :diminish projectile-mode
@@ -614,7 +604,8 @@ Just use =nix develop=
   (projectile-switch-project-action #'projectile-dired)
   (projectile-enable-caching t)
   (projectile-generic-command "rg --files --hidden --follow -g '!.git/'")
-  :hook (after-init . projectile-mode))
+  :hook (after-init . projectile-mode)
+  :config (define-key global-map (kbd "C-x p") 'projectile-command-map))
 #+end_src
 
 *** Dirvish
@@ -646,7 +637,6 @@ Just use =nix develop=
 #+end_src
 
 ** Direnv
-
 #+begin_src emacs-lisp
 (use-package envrc
   :demand t  ; Load immediately instead of deferring
@@ -666,9 +656,7 @@ Just use =nix develop=
 #+end_src
 
 ** LSP
-
 *** Auto-completion
-
 #+begin_src emacs-lisp
 (use-package company
   :init (global-company-mode)
@@ -688,7 +676,6 @@ Just use =nix develop=
 #+end_src
 
 *** Togglable LSP System
-
 #+begin_src emacs-lisp
 ;; Define the LSP choice customization
 (defcustom thornemacs/lsp-backend 'eglot
@@ -782,7 +769,6 @@ Just use =nix develop=
 #+end_src
 
 *** LSP Packages Configuration
-
 #+begin_src emacs-lisp
 (use-package eglot
   :commands (eglot eglot-ensure)
@@ -813,7 +799,6 @@ Just use =nix develop=
 #+end_src
 
 *** Language-specific LSP Setup
-
 #+begin_src emacs-lisp
 ;; Install language modes
 (use-package rustic
@@ -882,7 +867,6 @@ Just use =nix develop=
 #+end_src
 
 *** Org-Integration
-
 #+begin_src emacs-lisp
 (defun thornemacs/start-lsp-manually-for-lang (lang)
   "Start LSP for a specific language in org-mode code blocks."
@@ -898,12 +882,10 @@ Just use =nix develop=
 #+end_src
 
 *** TODO Modeline-Integration 
-
 #+begin_src emacs-lisp
 #+end_src
 
 ** Vterm
-
 #+begin_src emacs-lisp
 (use-package vterm
   :custom
@@ -913,9 +895,7 @@ Just use =nix develop=
 #+end_src
 
 ** Org
-
 *** General Settings
-
 #+begin_src emacs-lisp
 (use-package org
   :mode ("\\.org\\'" . org-mode)
@@ -964,7 +944,6 @@ Just use =nix develop=
 #+end_src  
 
 *** Org-modern
-
 #+begin_src emacs-lisp
 (use-package org-modern
   :after org
@@ -972,7 +951,6 @@ Just use =nix develop=
 #+end_src
 
 *** Org-babel
-
 #+begin_src emacs-lisp
 (use-package org
   :defer t
@@ -988,7 +966,6 @@ Just use =nix develop=
 #+end_src
 
 *** Org-roam
-
 #+begin_src emacs-lisp
 (use-package org-roam
   :defer t
@@ -997,7 +974,6 @@ Just use =nix develop=
 #+end_src
 
 *** Org-src-mode
-
 #+begin_src emacs-lisp
 (add-hook 'org-src-mode-hook
           (lambda ()
@@ -1005,7 +981,6 @@ Just use =nix develop=
 #+end_src
 
 ** Magit
-
 #+begin_src emacs-lisp
 (use-package magit
   :commands (magit-status magit-log-current magit-blame)
@@ -1016,14 +991,12 @@ Just use =nix develop=
 #+end_src
 
 * TO-DO
-
-- [ ] Implement more colorschemes because I like way too many of them.
-- [ ] Add the option for overrides...bc nix.
-- [ ] Add custom banners and footers.
+- [X] Implement more colorschemes because I like way too many of them.
+- [X] Add the option for overrides...bc nix.
+- [X] Add custom banners and footers.
 - [ ] Whatever else I come up with lmao.
 
 * Credits
-
 - [[https://github.com/iynaix][@iynaix]]:
   - Get with the program already folks! I +stole+ took inspiration
     from [[https://github.com/iynaix/focal][iynaix/focal]] for the flake as well as this README.
