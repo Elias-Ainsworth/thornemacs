@@ -254,12 +254,20 @@ Just use =nix develop=
   (set-frame-parameter nil 'internal-border-width 0)
 #+end_src
 
-*** Font sizing
+*** Fonts
 #+begin_src emacs-lisp
-(let ((current-font (face-attribute 'default :family)))
-  (set-face-attribute 'default nil
-    :family current-font
-    :height 120))
+(set-face-attribute 'default nil
+  :family "Geist Mono NerdFont"
+  :height 120)
+
+(set-fontset-font t 'japanese-jisx0208 (font-spec :family "Mamelon"))
+(set-fontset-font t 'han (font-spec :family "Mamelon"))
+(set-fontset-font t 'kana (font-spec :family "Mamelon"))
+(set-fontset-font t 'cjk-misc (font-spec :family "Mamelon"))
+(set-fontset-font t 'greek (font-spec :family "Geist Mono NerdFont"))
+(set-fontset-font t 'latin (font-spec :family "Geist Mono NerdFont"))
+(set-fontset-font t 'ascii (font-spec :family "Geist Mono NerdFont"))
+(set-fontset-font t 'unicode (font-spec :family "Geist Mono NerdFont"))
 #+end_src
 
 *** Theme 
@@ -947,7 +955,14 @@ Just use =nix develop=
 #+begin_src emacs-lisp
 (use-package org-modern
   :after org
-  :hook (org-mode . org-modern-mode))
+  :hook (org-mode . org-modern-mode)
+  :custom
+  ;; (org-modern-hide-stars t)
+  (org-modern-star t)
+  (org-modern-replace-stars "αβγδεζηθικ")
+  ;; (org-modern-replace-stars "一二三四五六七八九十")
+  ;; (org-modern-replace-stars "ᚦᚨᚱᛃᛇᛉᛊᛏᛜᛞ")
+)
 #+end_src
 
 *** Org-babel
