@@ -1016,6 +1016,7 @@ Just use =nix develop=
 - [X] Implement more colorschemes because I like way too many of them.
 - [X] Add the option for overrides...bc nix.
 - [X] Add custom banners and footers.
+- [ ] Add option to set the theme via a home-manager option.
 - [ ] Whatever else I come up with lmao.
 
 * Credits
