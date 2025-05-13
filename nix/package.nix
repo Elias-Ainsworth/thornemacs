@@ -1,4 +1,5 @@
 {
+  pkgs,
   emacsWithPackagesFromUsePackage,
   emacs-git-pgtk,
   ...
@@ -13,8 +14,9 @@ emacsWithPackagesFromUsePackage {
   alwaysTangle = true;
 
   extraEmacsPackages =
-    epkgs: with epkgs; [
-
+    epkgs:
+    with epkgs;
+    [
       # Core
       use-package
       babel
@@ -114,5 +116,6 @@ emacsWithPackagesFromUsePackage {
 
       # File Manager
       dirvish
-    ];
+    ]
+    ++ [ pkgs.emacs-lsp-booster ];
 }

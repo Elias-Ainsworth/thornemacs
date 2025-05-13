@@ -37,7 +37,7 @@ Alternatively, it can also be run directly:
 nix run github:Elias-Ainsworth/thornemacs
 #+end_src
 
-*** home-manager 
+*** home-manager
 This program can be configured via home-manager. Include the flake
 input, but you don't need to add it to =home.packages=-enabling the
 module handles that automatically.
@@ -57,10 +57,11 @@ home-manager configuration:
     };
     installAssets = {
       enable = true;
-      ascii = true; 
-      icons = true; 
+      ascii = true;
+      icons = true;
       images = true;
       org = true;
+      themes = true;
     };
     package = inputs.thornemacs.packages.${pkgs.system}.default; # I don't know why you'd do this...
   };
@@ -97,7 +98,7 @@ Just use =nix develop=
 #+end_src
 
 ** Performance Tweaks
-*** Garbage Collection 
+*** Garbage Collection
 #+begin_src emacs-lisp
 ;; Speed up startup by raising GC limits
 (setq gc-cons-threshold most-positive-fixnum
@@ -256,35 +257,41 @@ Just use =nix develop=
 
 *** Fonts
 #+begin_src emacs-lisp
-(set-face-attribute 'default nil
-  :family "Geist Mono NerdFont"
-  :height 120)
+(let ((current-font (face-attribute 'default :family)))
+  (set-face-attribute 'default nil
+    :family current-font
+    :height 120))
+
+;; (set-face-attribute 'default nil
+;;   :family "Geist Mono NerdFont"
+;;   :height 120)
 
 (set-fontset-font t 'japanese-jisx0208 (font-spec :family "Mamelon"))
 (set-fontset-font t 'han (font-spec :family "Mamelon"))
 (set-fontset-font t 'kana (font-spec :family "Mamelon"))
 (set-fontset-font t 'cjk-misc (font-spec :family "Mamelon"))
-(set-fontset-font t 'greek (font-spec :family "Geist Mono NerdFont"))
-(set-fontset-font t 'latin (font-spec :family "Geist Mono NerdFont"))
-(set-fontset-font t 'ascii (font-spec :family "Geist Mono NerdFont"))
-(set-fontset-font t 'unicode (font-spec :family "Geist Mono NerdFont"))
 #+end_src
 
-*** Theme 
+*** Theme
 #+begin_src emacs-lisp
 ;; (use-package catppuccin-theme
 ;;   :config (setq catppuccin-flavor 'mocha)
 ;;   :init (load-theme 'catppuccin :no-confirm))
-
-(use-package gruvbox-theme
-  :defer nil
-  ;; :config
-  ;; Optional: Customize Gruvbox flavor (e.g., light or dark)
-  ;; (setq gruvbox-dark-variant 'hard)  ; Use the 'hard' variant of dark mode
-  :init
-  (load-theme 'gruvbox-dark-hard t)) 
-
 ;; (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
+
+;; (use-package gruvbox-theme
+;;   :defer nil
+;;   ;; :config
+;;   ;; Optional: Customize Gruvbox flavor (e.g., light or dark)
+;;   ;; (setq gruvbox-dark-variant 'hard)  ; Use the 'hard' variant of dark mode
+;;   :init
+;;   (load-theme 'gruvbox-dark-hard t))
+
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/everforest-emacs/")
+(add-to-list 'custom-theme-load-path "./assets/themes/everforest-emacs/")
+(load-theme 'everforest-medium-dark t)  ;; or 'everforest-soft-light etc.
+;; Paths to Everforest theme directories
+;; Define Everforest theme search paths
 #+end_src
 
 *** Wallpaper
@@ -510,7 +517,7 @@ Just use =nix develop=
 ;;   :hook (prog-mode . thornemacs/enable-indent-guides-safe)
 ;;   :custom
 ;;   (highlight-indent-guides-method 'character)
-;;   (highlight-indent-guides-auto-enabled t)  
+;;   (highlight-indent-guides-auto-enabled t)
 ;;   (highlight-indent-guides-responsive 'top))
 
 ;; (use-package highlight-indent-guides
@@ -799,10 +806,10 @@ Just use =nix develop=
   :commands (eldoc-box-hover-at-point-mode)
   :bind ("C-c d" . eldoc-box-help-at-point)
   :custom
-  (eldoc-idle-delay 1.2)          
+  (eldoc-idle-delay 1.2)
   (eldoc-echo-area-use-multiline-p nil)
   (eldoc-box-only-multi-line t)
-  (eldoc-box-clear-with-C-g t))        
+  (eldoc-box-clear-with-C-g t))
 
 #+end_src
 
@@ -889,7 +896,7 @@ Just use =nix develop=
 (global-set-key (kbd "C-c t m") 'thornemacs/start-lsp-manually-for-lang)
 #+end_src
 
-*** TODO Modeline-Integration 
+*** TODO Modeline-Integration
 #+begin_src emacs-lisp
 #+end_src
 
@@ -949,7 +956,7 @@ Just use =nix develop=
     (face-remap-add-relative 'rust-ampersand-face '(:inherit org-block))))
 
 (add-hook 'org-mode-hook #'my/org-mode-rust-face-override)
-#+end_src  
+#+end_src
 
 *** Org-modern
 #+begin_src emacs-lisp

@@ -57,6 +57,11 @@ in
           default = cfg.installAssets.enable;
           description = "install custom org templates";
         };
+        themes = mkOption {
+          type = bool;
+          default = cfg.installAssets.enable;
+          description = "install custom themes cuz I'm too lazy to figure out the nix way";
+        };
       };
       package = mkOption {
         type = package;
@@ -94,6 +99,10 @@ in
       };
       "emacs/org" = mkIf cfg.installAssets.org {
         source = ../assets/org;
+        recursive = true;
+      };
+      "emacs/themes" = mkIf cfg.installAssets.themes {
+        source = ../assets/themes;
         recursive = true;
       };
     };
