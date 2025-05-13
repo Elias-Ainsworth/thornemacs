@@ -477,6 +477,7 @@ Just use =nix develop=
   (setq dashboard-banner-logo-title "")
   (setq dashboard-center-content t)
   (setq dashboard-show-shortcuts nil)
+  (setq dashboard-projects-backend 'projectile)
 
   ;; Dashboard items
   (setq dashboard-items '((recents  . 5)
