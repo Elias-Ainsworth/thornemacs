@@ -279,20 +279,21 @@ Just use =nix develop=
 ;;   :init (load-theme 'catppuccin :no-confirm))
 ;; (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
 
-;; (use-package gruvbox-theme
-;;   :defer nil
-;;   ;; :config
-;;   ;; Optional: Customize Gruvbox flavor (e.g., light or dark)
-;;   ;; (setq gruvbox-dark-variant 'hard)  ; Use the 'hard' variant of dark mode
-;;   :init
-;;   (load-theme 'gruvbox-dark-hard t))
+(use-package gruvbox-theme
+  :defer nil
+  ;; :config
+  ;; Optional: Customize Gruvbox flavor (e.g., light or dark)
+  ;; (setq gruvbox-dark-variant 'hard)  ; Use the 'hard' variant of dark mode
+  :init
+  (load-theme 'gruvbox-dark-hard t))
 
-(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/everforest-emacs/")
-(add-to-list 'custom-theme-load-path "./assets/themes/everforest-emacs/")
-(load-theme 'everforest-medium-dark t)  ;; or 'everforest-soft-light etc.
-;; Paths to Everforest theme directories
-;; Define Everforest theme search paths
+;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/everforest-emacs/")
+;; (add-to-list 'custom-theme-load-path "./assets/themes/everforest-emacs/")
+;; (load-theme 'everforest-medium-dark t)  ;; or 'everforest-soft-light etc.
 #+end_src
+
+#+RESULTS:
+: gruvbox-theme
 
 *** Wallpaper
 #+begin_src emacs-lisp
@@ -471,24 +472,24 @@ Just use =nix develop=
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   :config
   (dashboard-setup-startup-hook)
-
+  :custom
   ;; Banner and layout
-  (setq dashboard-startup-banner (cons "~/.config/emacs/images/chise.png" "~/.config/emacs/ascii/eepy.txt")) ; You can use a custom path too
-  (setq dashboard-banner-logo-title "")
-  (setq dashboard-center-content t)
-  (setq dashboard-show-shortcuts nil)
-  (setq dashboard-projects-backend 'projectile)
+  (dashboard-startup-banner (cons "~/.config/emacs/images/chise.png" "~/.config/emacs/ascii/eepy.txt")) ; You can use a custom path too
+  (dashboard-banner-logo-title "")
+  (dashboard-center-content t)
+  (dashboard-show-shortcuts nil)
+  (dashboard-projects-backend 'projectile)
 
   ;; Dashboard items
-  (setq dashboard-items '((recents  . 5)
+  (dashboard-items '((recents  . 5)
                           (projects . 5)
-                          (agenda   . 5))))
-(setq dashboard-footer-messages
+                          (agenda   . 5)))
+  (dashboard-footer-messages
       (let ((quotes '("#[derive(dumb)]"
                       "「僕はエリアス・エインズワースかもしれないが、
                                 チセがいない――つまり、僕は完全に『チセレス』だ。」 "
                       "Sacrifice yourself, or bow to lesser gods...")))
-        (list (nth (random (length quotes)) quotes))))
+        (list (nth (random (length quotes)) quotes)))))
 #+end_src
 
 *** Modeline
