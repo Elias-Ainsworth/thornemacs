@@ -941,6 +941,8 @@ Just use =nix develop=
   (org-hide-leading-stars t)
   (org-edit-src-content-indentation 0)
   (org-html-validation-link nil)
+  (org-export-with-broken-links t)
+  ;; (org-html-htmlize-output-type 'css) 
   :config
   ;; UI hooks
   (add-hook 'org-mode-hook #'auto-fill-mode)
