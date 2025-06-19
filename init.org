@@ -181,12 +181,12 @@ Just use =nix develop=
 
 ** Recentf
 #+begin_src emacs-lisp
-(use-package recentf
-  :init
-  (setq recentf-max-saved-items 100
-        recentf-max-menu-items 15)
-  :hook (after-init . (lambda ()
-                         (run-with-timer 1 nil #'recentf-mode))))
+;; (use-package recentf
+;;   :init
+;;   (setq recentf-max-saved-items 100
+;;         recentf-max-menu-items 15)
+;;   :hook (after-init . (lambda ()
+;;                          (run-with-timer 1 nil #'recentf-mode))))
 #+end_src
 
 ** Evil Mode
@@ -925,7 +925,13 @@ Just use =nix develop=
         org-capture-templates
         `(("t" "Todo" entry
            (file+headline ,(expand-file-name "agenda/tasks.org" org-directory) "Tasks")
-           "* TODO %?\n %U\n %a")))
+           "* TODO %?\n %U\n %a")
+          ;; Correctly nest this under the backtick list
+          ;; ("z" "Zettel" plain
+          ;;  (file "~/org/roam/%<%Y%m%d%H%M%S>-${slug}.org")
+          ;;  "#+title: %^{Title}\n#+created: %U\n:PROPERTIES:\n:ID: %(org-id-uuid)\n:END:\n\n%?"
+          ;;  :unnarrowed t)
+		  ))
 
   ;; Global keybindings
   (global-set-key (kbd "C-c c") #'org-capture)
@@ -942,6 +948,7 @@ Just use =nix develop=
   (org-edit-src-content-indentation 0)
   (org-html-validation-link nil)
   (org-export-with-broken-links t)
+  (org-hide-properties t)
   ;; (org-html-htmlize-output-type 'css) 
   :config
   ;; UI hooks
@@ -995,8 +1002,42 @@ Just use =nix develop=
 #+begin_src emacs-lisp
 (use-package org-roam
   :defer t
-  :custom (org-roam-directory (expand-file-name "~/org/roam"))
-  :config (org-roam-db-autosync-mode))
+  :custom
+  (org-roam-directory (expand-file-name "~/org/roam"))
+  (org-roam-node-display-template
+   (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  :config
+  (org-roam-db-autosync-mode)
+  ;; Org-roam capture (Zettels)
+  (global-set-key (kbd "C-c r") #'org-roam-node-find)
+  (global-set-key (kbd "C-c n i") #'org-roam-node-insert)
+  (global-set-key (kbd "C-c n c") #'org-roam-capture)
+  (global-set-key (kbd "C-c n s") #'org-roam-db-sync)
+  (setq org-roam-capture-templates
+      '(("d" "default" plain
+          "* Summary\n%?\n\n* References\n- [[id:]] \n\n* Further Reading\n- \n\n* Notes\n- "
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n#+created: %U\n#+filetags: %^{Tags|programming|rust|nixos|linux|discrete-math|emacs|networking|theology|bible|christianity|apologetics|church-history|dnd|worldbuilding|lore|philosophy|metal|anime|manga|zettel|literature|reference|thought|project|idea|tutorial|todo|in-progress|done|review|stale|deprecated|daily|weekly|monthly|yearly}\n\n")
+          :unnarrowed t))))
+
+;; Global Org-ID Settings
+(setq org-id-locations-file (expand-file-name ".org-id-locations" "~/org/roam"))
+(setq org-id-track-globally t)
+
+(defun thornemacs/org-roam-replace-id-placeholder ()
+  "Delete the empty '[[id:]]' placeholder at point or when inside it, then call org-roam-node-insert."
+  (interactive)
+  (let ((bounds (org-element-context)))
+    (when (and (eq (car bounds) 'link)
+               (string= (org-element-property :type bounds) "id")
+               (string= (org-element-property :path bounds) ""))
+      (let ((begin (org-element-property :begin bounds))
+            (end (org-element-property :end bounds)))
+        (delete-region begin end)
+        (call-interactively #'org-roam-node-insert)))))
+
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c n r") #'thornemacs/org-roam-replace-id-placeholder))
 #+end_src
 
 *** Org-src-mode
