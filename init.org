@@ -1002,6 +1002,10 @@ Just use =nix develop=
 #+begin_src emacs-lisp
 (use-package org-roam
   :defer t
+  :bind (("C-c r" . org-roam-node-find)
+		 ("C-c n i" . org-roam-node-insert)
+		 ("C-c n c" . org-roam-capture)
+		 ("C-c n s" . org-roam-db-sync))
   :custom
   (org-roam-directory (expand-file-name "~/org/roam"))
   (org-roam-node-display-template
